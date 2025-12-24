@@ -12,7 +12,7 @@
                 </div></RouterLink>
             </LSToolTip>
         </div>
-        <div class="text-[30px]">Welcome to new with feature bro</div>
+        <div class="text-[30px]">Deploy with CI/CD.</div>
     </div>
 </template>
 
