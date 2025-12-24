@@ -28,11 +28,11 @@ jobs:
                 docker push ${{ secrets.USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.TAG }}
 
             # sdfsf
-            - name: Run Image to preview in Chrome
+            - name: Run Docker container
               run: |
                 docker stop web-back-ui-cont || true
                 docker rm web-back-ui-cont || true
-                docker run -dp 3333:80 --name web-back-ui-cont ${{ secrets.USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.TAG }}
+                docker run -d -p 3333:80 --name web-back-ui-cont ${{ secrets.USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.TAG }}
             - name: Logout from registry
               if: always()
               run: |
