@@ -19,7 +19,8 @@ jobs:
                 echo "TAG is ${{ env.TAG }} "
             - name: Login to Docker
               run: |
-                docker login -u ${{ secrets.USERNAME }} --password-stdin
+                echo "${{ secrets.PASSWORD }}" | docker login -u ${{ secrets.USERNAME }} 
+                --password-stdin
             - name: Build Image for docker hub
               run: |
                 docker build -t  ${{ secrets.USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.TAG }} .
