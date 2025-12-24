@@ -12,7 +12,7 @@
                 </div></RouterLink>
             </LSToolTip>
         </div>
-        <div class="text-[30px]">Welcome to github action</div>
+        <div class="text-[30px]">Welcome to github action2</div>
     </div>
 </template>
 
