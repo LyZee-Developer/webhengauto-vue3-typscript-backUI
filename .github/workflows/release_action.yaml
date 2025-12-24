@@ -33,6 +33,9 @@ jobs:
                 docker stop web-back-ui-cont || true
                 docker rm web-back-ui-cont || true
                 docker run -d -p 3333:80 --name web-back-ui-cont ${{ secrets.USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.TAG }}
+            - name: Check Container
+              run: |
+                docker ps
             - name: Logout from registry
               if: always()
               run: |
