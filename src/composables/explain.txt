@@ -1,0 +1,2 @@
+├── composables/         # Reusable logic (hooks)
+│   └── useAuth.ts

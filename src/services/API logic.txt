@@ -1,0 +1,3 @@
+├── services/            # API logic
+│   ├── http.ts
+│   └── auth.service.ts

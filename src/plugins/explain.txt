@@ -1,0 +1,3 @@
+├── plugins/             # Vue plugins
+│   ├── pinia.ts
+│   └── axios.ts

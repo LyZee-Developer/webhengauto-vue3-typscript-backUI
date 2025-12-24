@@ -1,0 +1,28 @@
+name: Deploy Project Web Back UI
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment: DOCKER_ENV
+    steps:
+      - name: Clone code
+        uses: actions/checkout@v3
+      - name: Use with USA by GitHub
+        run: |
+           echo "TAG=${GITHUB_SHA::8}" >> $GITHUB_ENV
+      - name: Show tag value
+        run: |
+          echo "Tag is : ${{ env.TAG }}"
+      - name: Login to DockerHub
+        run: |
+          echo "${{ secrets.PASSWORD }}" | docker login -u ${{ secrets.USERNAME }} --password-stdin 
+      - name: Build Docker Images
+        run:
+          docker build -t ${{ secrets.USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.TAG }} .
+      - name: Push to Docker Hub
+        run: 
+          docker push ${{ secrets.USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.TAG }}
+      - name: Logout from DockerHub
+        if: always()
+        run: |
+          docker logout
