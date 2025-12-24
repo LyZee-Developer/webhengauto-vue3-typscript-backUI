@@ -41,7 +41,7 @@ jobs:
     deploy-gcp:
       needs: build-push
       runs-on: ubuntu-latest
-      environment: GOOGLE_CLOUND_ENV
+      environment: GOOGLE_ENV
       steps:
           - name: Clone code
             uses: actions/checkout@v3
@@ -55,8 +55,8 @@ jobs:
             uses: appleboy/ssh-action@v1.0.0
             with:
               host: ${{ secrets.IP }}
-              username: ${{ secrets.GCD_USER }}
-              key: ${{ secrets.PRIVATE_KEY }}
+              username: ${{ secrets.USER }}
+              key: ${{ secrets.PK }}
               envs: TAG
               script: |
                 docker stop heng-service-app || true
@@ -64,20 +64,3 @@ jobs:
                 docker run -dp 8080:80 \
                 --name heng-service-app \
                 "lsdockers/${{env.IMAGE_NAME}}:${{env.TAG}}"
-
-
-               
-
-
-
-
-
-
-
-
-            
-
-
-
-    
-
