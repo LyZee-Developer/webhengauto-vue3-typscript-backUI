@@ -1,0 +1,4 @@
+├── views/               # Pages (route-level components)
+│   ├── HomeView.vue
+│   ├── LoginView.vue
+│   └── NotFoundView.vue

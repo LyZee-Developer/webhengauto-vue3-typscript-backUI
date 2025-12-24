@@ -1,0 +1,3 @@
+├── store/               # Pinia stores
+│   ├── index.ts
+│   └── auth.store.ts

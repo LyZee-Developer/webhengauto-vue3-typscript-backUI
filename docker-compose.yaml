@@ -1,0 +1,13 @@
+services:
+  vue-svc:
+    image: lsdockers/auto-vue:v1.0.0
+    container_name: vue-web-cont
+    ports:
+      - 3003:80
+    build:
+      context: ./
+      dockerfile: dockerFile
+    networks:
+      - vue-net
+networks:
+  vue-net:
