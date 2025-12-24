@@ -1,5 +1,5 @@
 <template>
-    <div class="w-full flex justify-center items-center h-full">
+    <div class="w-full flex justify-center items-center h-full flex-col">
         <div class="max-w-[850px] flex flex-wrap justify-center items-center gap-6 p-4">
         
             <LSToolTip v-for="item in menu_data" :title="system.language[item.title]">
@@ -12,6 +12,7 @@
                 </div></RouterLink>
             </LSToolTip>
         </div>
+        <div class="text-[30px]">Welcome to github action</div>
     </div>
 </template>
 
