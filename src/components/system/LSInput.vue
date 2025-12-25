@@ -1,45 +1,22 @@
 <template>
     <div class="ls-btn">
-         <fwb-input
-            v-model="dataModel"
-            :placeholder="prop.placeholder"
-            :label="prop.label"
-            :type="type"
-            :required="prop.required"
-            :input-class="`!bg-white !rounded-md !text-black ${size} `"
-            label-class="!text-black"
-            class="bg-red-600 "
-            :validation-status="isRequired?dataModel=='' && hasChange?'error':undefined:undefined"
-            @input="onChange"
-        >
-        <template #validationMessage>
-            <div v-if="dataModel=='' && isRequired && hasChange">{{ prop.label }} is required!</div>
-        </template>
-       
-    </fwb-input>
+        <LSToolTip :title="prop.invalid?'This field are required':''">
+            <FloatLabel :variant="variant" class=""
+            >
+                <InputText v-model="dataModel" :invalid="prop.invalid" class=" w-full" :id="prop.label" />
+                <label :for="prop.label" class="color-3  text-[12px] ">{{ prop.label }}</label>
+            </FloatLabel>
+        </LSToolTip>
     </div>
 </template>
 
 <script lang="ts" setup>
-   import { FwbInput } from 'flowbite-vue';
-import { computed, ref, watch } from 'vue';
-   const prop = defineProps(["placeholder","label","ui","size","type","required"])
-   const isRequired = computed(()=>prop.required || false)
-   const type = computed<'text' | 'password'>(() => {
-    return prop.type === 'pw' ? 'password' : 'text'
-    })
-    const size = computed(()=>prop.size||"size-1")
-    const hasChange = ref<boolean>(false);
-    const onChange=()=>{
-        hasChange.value = true;
-    }
-   
+    import { FloatLabel,InputText } from 'primevue';
+    import LSToolTip from './LSToolTip.vue';
+import { computed } from 'vue';
+   const prop = defineProps(["placeholder","label","ui","size","type","required","variant","invalid"])
+     const variant=computed(()=>prop.variant||'on')
    const dataModel = defineModel<string>();
-   const trigger = defineModel<boolean>("trigger");
-    watch(trigger,()=>{
-        if(dataModel.value=="") hasChange.value=true;
-        console.log("change")
-    })
   
 </script>
 

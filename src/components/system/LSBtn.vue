@@ -1,16 +1,38 @@
 <template>
     <div>
-        <fwb-button @click="onClickButton" color="green" size="xl" :class="prop.class" >{{ prop.label||"" }}</fwb-button>
+        <Button  :label="prop.label" :severity="color" 
+          :pt="{
+                label: { class: 'text-[15px] font-medium' }
+            }"
+           :loading="prop.isLoading" icon="pi pi-search" @click="onClickButton" >
+            <template #icon>
+                <RiSaveLine size="15px" class="font-medium" v-if="type.toLowerCase()=='save'"/>
+                <RiCloseLine size="15px" v-else-if="type.toLowerCase()=='cancel'"/>
+            </template>
+        </Button>
     </div>
 </template>
 
 <script lang="ts" setup>
-    import { FwbButton } from 'flowbite-vue'
-    const prop = defineProps(["label","color","class"])
+    import { RiCloseLine, RiSaveLine } from '@remixicon/vue'
+import { Button } from 'primevue'
+import { computed } from 'vue'
+    const prop = defineProps(["label","color","class","type","color","isLoading"])
     const emit = defineEmits(["clickOnButton"])
+    const type = computed(()=>prop.type || "")
     const onClickButton=()=>{
         emit("clickOnButton")
     }
+    const color = computed(()=>{
+        var cl = "secondary";
+        if(prop.type=="cancel") cl ="secondary";
+        if(prop.type=="save") cl ="success";
+        if(prop.type=="info") cl ="info";
+        if(prop.color=="danger") cl ="danger";
+        if(prop.type=="warn") cl ="warn";
+        if(prop.type=="contrast") cl ="contrast";
+        return cl;
+    })
 </script>
 
 <style lang="scss" scoped>

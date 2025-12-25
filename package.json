@@ -10,14 +10,17 @@
   },
   "dependencies": {
     "@mdi/font": "^7.4.47",
+    "@primeuix/themes": "^2.0.2",
+    "@primevue/forms": "^4.5.4",
     "@remixicon/vue": "^4.7.0",
     "@tailwindcss/vite": "^4.1.18",
     "@unhead/vue": "^2.0.19",
-    "flowbite": "^4.0.1",
-    "flowbite-vue": "^0.2.2",
     "pinia": "^3.0.4",
+    "primevue": "^4.5.4",
+    "tailwindcss-primeui": "^0.6.1",
     "vue": "^3.5.24",
-    "vue-router": "^4.6.4"
+    "vue-router": "^4.6.4",
+    "zod": "^4.2.1"
   },
   "devDependencies": {
     "@types/node": "^24.10.1",

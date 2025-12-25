@@ -1,21 +1,25 @@
 <template>
-    <fwb-tooltip  trigger="hover" :theme="system.isDark?'light':'dark'" placement="top">
-         <template #trigger>
-            <div>
-                <slot></slot>
-            </div>
-        </template>
-        <template #content>
-            {{ prop.title }}
-        </template>
-    </fwb-tooltip>
+    <div  v-if="placement=='top'" v-tooltip.top="prop.title" :theme="system.isDark?'light':'dark'">
+            <slot></slot>
+    </div>
+    <div  v-else-if="placement=='right'" v-tooltip.right="prop.title" :theme="system.isDark?'light':'dark'">
+            <slot></slot>
+    </div>
+    <div  v-else-if="placement=='bottom'" v-tooltip.bottom="prop.title" :theme="system.isDark?'light':'dark'">
+            <slot></slot>
+    </div>
+    <div  v-else-if="placement=='left'" v-tooltip.left="prop.title" :theme="system.isDark?'light':'dark'">
+            <slot></slot>
+    </div>
+   
 </template>
 
 <script setup lang="ts">
-    import { FwbTooltip } from 'flowbite-vue'
-    import { useSystem } from '../../store/system';
+    import { computed } from 'vue';
+import { useSystem } from '../../store/system';
     const  system  = useSystem()
-    const prop = defineProps(["title","label"])
+    const prop = defineProps(["title","label","place"])
+    const placement = computed(()=>prop.place || 'top')
 </script>
 
 <style scoped>

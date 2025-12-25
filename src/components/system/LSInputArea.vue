@@ -1,17 +1,16 @@
 <template>
-  <fwb-textarea
-    v-model="message"
-    :rows="4"
-    label="Your message"
-    class="w-full"
-    placeholder="Write your message..."
-  />
+ <FloatLabel :variant="variant">
+    <Textarea id="over_label" v-model="value" class="w-full" rows="2" cols="30" style="resize: none" />
+    <label for="over_label" class="text-[12px]">{{ prop.label }}</label>
+</FloatLabel>
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
-import { FwbTextarea } from 'flowbite-vue'
-const message = ref('')
+import { computed, ref } from 'vue'
+  const prop = defineProps(["placeholder","label","ui","size","type","variant"])
+  const variant=computed(()=>prop.variant||'on')
+const value = ref('')
+import { FloatLabel,Textarea } from 'primevue';
 </script>
 
 <style lang="scss" >

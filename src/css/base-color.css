@@ -123,3 +123,10 @@ body{
         background: var(--hover-bg-constra-card) !important;
     }
 }
+
+.wrapContent {
+    .bg-content{
+          background: var(--bg) !important;
+    }
+}
+
