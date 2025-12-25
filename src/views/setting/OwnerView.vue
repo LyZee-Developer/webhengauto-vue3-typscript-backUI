@@ -64,7 +64,6 @@ import { isEmptyData } from '../../utils/global_helper';
 import { useSystem } from '../../store/system';
 const system = useSystem();
 const tr  = ref<Record<string,string>>({});
-const {language} = system;
 const isHasInfo = ref<boolean>(true)
 const uploadImage = ref<HTMLInputElement | null>(null)
 const trackIsReset = ref<boolean>(false)
@@ -79,7 +78,7 @@ const onFileSelected = (event: Event) => {
   file.value = input.files[0]
   preview.value = URL.createObjectURL(file.value)
 }
-    const onClickUploadImage=(e:any)=>{
+    const onClickUploadImage=()=>{
         uploadImage.value?.click()
     }
     const values = ref({
