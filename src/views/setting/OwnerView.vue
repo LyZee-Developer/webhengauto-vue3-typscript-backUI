@@ -57,7 +57,6 @@ import LSBtn from '../../components/system/LSBtn.vue';
 import { RiMegaphoneLine } from '@remixicon/vue';
 import { FwbTextarea } from 'flowbite-vue'
 import LSInput from '../../components/system/LSInput.vue';
-import LSInputArea from '../../components/system/LSInputArea.vue';
     const isHasInfo = ref<boolean>(true)
     const clickOnButton=()=>{
         isHasInfo.value =!isHasInfo.value;

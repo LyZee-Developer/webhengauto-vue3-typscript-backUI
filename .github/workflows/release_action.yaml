@@ -1,0 +1,66 @@
+on:
+    push:
+        branches:
+            - master
+env:
+    IMAGE_NAME: auto-vue
+jobs:
+    build-push:
+        runs-on: ubuntu-latest
+        environment: DOCKER_ENV
+        steps:
+            - name: Clone code
+              uses: actions/checkout@v3
+            - name: Use with SHA
+              run: |
+                echo "TAG=${GITHUB_SHA::8}" >> $GITHUB_ENV
+            - name: Show Tag
+              run: |
+                echo "TAG is ${{ env.TAG }} "
+            - name: Login to Docker
+              run: |
+                echo "${{ secrets.PW }}" | docker login -u "${{ secrets.USERNAME }}" --password-stdin
+            - name: Build Image for docker hub
+              run: |
+                docker build -t   ${{ secrets.USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.TAG }} -f dockerFile .
+            - name: Push DockerHub
+              run: |
+                docker push ${{ secrets.USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.TAG }}
+            - name: Run Docker container
+              run: |
+                docker stop web-back-ui-cont || true
+                docker rm web-back-ui-cont || true
+                docker run -d -p 3333:80 --name web-back-ui-cont ${{ secrets.USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.TAG }}
+            - name: Check Container
+              run: |
+                docker ps
+            - name: Logout from registry
+              if: always()
+              run: |
+                docker logout
+    deploy-gcp:
+      needs: build-push
+      runs-on: ubuntu-latest
+      environment: GOOGLE_ENV
+      steps:
+          - name: Clone code
+            uses: actions/checkout@v3
+          - name: Use with SHA
+            run: |
+                echo "TAG=${GITHUB_SHA::8}" >> $GITHUB_ENV
+          - name: Show Tag
+            run: |
+                echo "TAG is ${{ env.TAG }} "   
+          - name: Deploy by ssh
+            uses: appleboy/ssh-action@v1.0.0
+            with:
+              host: ${{ secrets.IP }}
+              username: ${{ secrets.USER }}
+              key: ${{ secrets.PK }}
+              envs: TAG
+              script: |
+                docker stop heng-service-app || true
+                docker rm heng-service-app || true
+                docker run -dp 8080:80 \
+                --name heng-service-app \
+                "lsdockers/${{env.IMAGE_NAME}}:${{env.TAG}}"
