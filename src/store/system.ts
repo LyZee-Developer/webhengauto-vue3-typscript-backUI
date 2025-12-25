@@ -29,6 +29,7 @@ export const useSystem = defineStore("system",{
             this.viewType = viewType;
         },
         setLanguage(code:string){
+            console.log("code",code)
             this.language = getLanguage(code);
         },
         setCountry(country:Country){

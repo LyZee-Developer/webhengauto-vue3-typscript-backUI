@@ -50,7 +50,6 @@ const route = useRoute();
 const path = route.fullPath.split("/")[1];
 const isShowCountry = ref<boolean>(false)
 const isShowIconMobile = ref<boolean>(path!="");
-    console.log("path",isShowIconMobile.value)
     const system = useSystem();
     const tr= ref();
     const isShowModalLanguage = ref<boolean>(false);
@@ -72,6 +71,7 @@ const onSelectLanguage=(language:Country )=>{
     localStorage.setItem("lang",JSON.stringify(language))
 }
 watch(system,()=>{
+    console.log("country",system.country)
     tr.value = system.language;
 },{deep:true,immediate:true})
 </script>

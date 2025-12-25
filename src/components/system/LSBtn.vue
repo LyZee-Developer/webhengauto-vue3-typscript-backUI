@@ -1,6 +1,7 @@
 <template>
-    <div>
+    <div class="max-[430px]:w-full">
         <Button  :label="prop.label" :severity="color" 
+            class="w-full"
           :pt="{
                 label: { class: 'text-[15px] font-medium' }
             }"
@@ -8,13 +9,14 @@
             <template #icon>
                 <RiSaveLine size="15px" class="font-medium" v-if="type.toLowerCase()=='save'"/>
                 <RiCloseLine size="15px" v-else-if="type.toLowerCase()=='cancel'"/>
+                <RiRefreshLine size="15px" v-else-if="type.toLowerCase()=='reset'"/>
             </template>
         </Button>
     </div>
 </template>
 
 <script lang="ts" setup>
-    import { RiCloseLine, RiSaveLine } from '@remixicon/vue'
+    import { RiCloseLine, RiRefreshLine, RiSaveLine } from '@remixicon/vue'
 import { Button } from 'primevue'
 import { computed } from 'vue'
     const prop = defineProps(["label","color","class","type","color","isLoading"])
@@ -29,7 +31,7 @@ import { computed } from 'vue'
         if(prop.type=="save") cl ="success";
         if(prop.type=="info") cl ="info";
         if(prop.color=="danger") cl ="danger";
-        if(prop.type=="warn") cl ="warn";
+        if(prop.type=="warn" || prop.type=="reset" ) cl ="warn";
         if(prop.type=="contrast") cl ="contrast";
         return cl;
     })

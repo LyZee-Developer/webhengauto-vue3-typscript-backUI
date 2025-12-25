@@ -5,11 +5,17 @@
   </div>
 </template>
 <script setup lang="ts">
-import { watch } from 'vue';
+import { onMounted, watch } from 'vue';
 import { useSystem } from './store/system';
 import MobileMenuSlide from './components/system/MobileMenuSlide.vue';
 import { isEmptyData } from './utils/global_helper';
   const system = useSystem();
+  onMounted(()=>{
+      var lang = localStorage.getItem("lang")
+      if(lang!=null){
+        system.setCountry(JSON.parse(lang))
+      }
+  })
   watch(system,()=>{
     var theme = localStorage.getItem("theme")
     var lang = localStorage.getItem("lang")
@@ -18,10 +24,18 @@ import { isEmptyData } from './utils/global_helper';
       else document.body.classList.add('dark');
       system.setIsDark(theme=='dark')
     }
-    if(isEmptyData(lang)) system.setLanguage("kh")
+    if(isEmptyData(lang)) {
+      system.setLanguage("kh")
+      document.body.classList.add('kh');
+    }
     else {
-      if(lang!=null)
+      if(lang!=null){
         system.setLanguage(JSON.parse(lang).code)
+        if(JSON.parse(lang).code=='kh'){
+          document.body.classList.add('kh');
+        }else document.body.classList.remove('kh');
+      }
+        
     }
   },{deep:true,immediate:true})
 

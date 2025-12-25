@@ -39,5 +39,22 @@
      "setting":"កំណត់ប្រព័ន្ទ",
      "partner":"ដៃគូពាណិជ្ជកម្ម",
      "owner":"ម្ចាស់អាជីវកម្ម",
-     "security_password":"ប្រព័ន្ធការពារ"
+     "security_password":"ប្រព័ន្ធការពារ",
+     "enter_name":"សូមបញ្ចូលឈ្មោះ",
+     "enter_english_name":"សូមបញ្ចូលឈ្មោះអង់គ្លេស",
+     "enter_phone":"សូមបញ្ចូលលេខទូរស័ព្ទ",
+     "enter_email":"សូមបញ្ចូលអ៊ីម៉ែល",
+     "enter_sub_description":"សូមបញ្ចូលបរិយាយ",
+     "enter_sub_en_description":"សូមបញ្ចូលបរិយាយអង់គ្លេស",
+     "enter_description":"សូមបញ្ចូលបរិយាយ",
+     "enter_en_description":"សូមបញ្ចូលបរិយាយអង់គ្លេស",
+     "enter_facebook":"សូមបញ្ចូលលីងFacebook",
+     "enter_telegram":"សូមបញ្ចូលលីងតេឡេក្រាម",
+     "enter_working_info":"សូមបញ្ចូលម៉ោងធ្វើការ",
+     "save_info":"រក្សាទុកព័ត៏មាន",
+     "cancel":"បោះបង់",
+     "your_company_name":"ឈ្មោះក្រុមហ៊ុនរបស់អ្នក",
+     "your_company_en_name":"ឈ្មោះក្រុមហ៊ុនអង់គ្លេសរបស់អ្នក",
+     "your_info":"ព័ត័មានរបស់អ្នក",
+     "this_field_is_required":"ប្រអប់នេះតម្រូវអោយមានតម្លៃ"
 }

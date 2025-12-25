@@ -31,8 +31,8 @@
                     </div>
                 </div>
             </div>
-            <div class="w-full h-full  py-3 pr-4">
-                <div class="w-full rounded-2xl p-6 h-full bg-card wrapContent">
+            <div class="w-full h-full  py-3 pr-4 max-[430px]:p-0">
+                <div class="w-full rounded-2xl p-6 h-full min-[430px]:bg-card wrapContent">
                     <slot></slot>
                 </div>
             </div>
