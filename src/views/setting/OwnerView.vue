@@ -1,11 +1,11 @@
 <template>
-    <div class="w-full h-full bg-content rounded-2xl">
+    <div class="w-full h-full min-[430px]:bg-white  rounded-2xl">
         <div v-if="!isHasInfo" class="w-full h-full flex justify-center items-center">
             <LSBtn type="info" label="ADD YOUR INFO WEBSITE" class="bg-system cursor-pointer" @clickOnButton="clickOnButton"/>
         </div>
         <div v-else class="p-5 flex flex-col gap-y-3 max-[430px]:p-0">
             <div class="flex gap-5 items-center max-[430px]:flex-col ">
-                <div class="max-[430px]:w-[100px] relative max-[430px]:h-[100px] w-[80px] h-[80px] rounded-full  p-2 bd-card">
+                <div class="max-[430px]:w-[100px] relative max-[430px]:h-[100px] w-[80px] h-[80px] rounded-full max-[430px]:p-2 p-1 bd-card">
                     <img :src="!isEmptyData(preview)?preview:'https://i.sstatic.net/y9DpT.jpg'" class="w-full h-full rounded-full" alt="">
                     <div @click="onClickUploadImage" class="absolute bottom-[-10px] right-0 flex justify-center items-center w-[35px] h-[35px] rounded-full" :class="`${system.isDark?'bg-[#292929]':'bg-[#e7e7e7]'}`">
                         <RiCamera4Fill size="20px" class="color-system"/>
