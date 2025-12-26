@@ -17,11 +17,11 @@
 </template>
 
 <script lang="ts" setup>
-    import { FloatLabel,InputText, Password } from 'primevue';
+    import { FloatLabel,InputText } from 'primevue';
     import LSToolTip from './LSToolTip.vue';
     import { computed, ref, watch } from 'vue';
 import { useSystem } from '../../store/system';
-import { RiEye2Fill, RiEyeCloseFill, RiEyeFill } from '@remixicon/vue';
+import {  RiEyeCloseFill, RiEyeFill } from '@remixicon/vue';
     const prop = defineProps(["placeholder","label","ui","size","type","required","variant","invalid"])
     const variant=computed(()=>prop.variant||'on')
     const inputType=computed(()=>prop.type||'text')

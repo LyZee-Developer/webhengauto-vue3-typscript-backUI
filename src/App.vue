@@ -11,9 +11,13 @@ import { useSystem } from './store/system';
 import MobileMenuSlide from './components/system/MobileMenuSlide.vue';
 import { isEmptyData } from './utils/global_helper';
 import LSToast from './components/system/LSToast.vue';
+import { useRouter } from 'vue-router';
+
   const system = useSystem();
+  const route = useRouter();
   onMounted(()=>{
       var lang = localStorage.getItem("lang")
+      route.push('/login')
       if(lang!=null){
         system.setCountry(JSON.parse(lang))
       }

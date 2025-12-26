@@ -52,12 +52,10 @@ import LSBtn from '../../components/system/LSBtn.vue';
 import google from '../../assets/logo/google.svg'
 import apple from '../../assets/logo/apple.svg'
 import { useRouter } from 'vue-router';
-import { useSystem } from '../../store/system';
 import { isEmptyData, ToastMessage } from '../../utils/global_helper';
 const username = ref("")
 const password = ref("")
 const confirm_password = ref("")
-const system = useSystem();
 const route = useRouter()
 const isLogin = ref<boolean>(false)
 const isClearError = ref<boolean>(false)
