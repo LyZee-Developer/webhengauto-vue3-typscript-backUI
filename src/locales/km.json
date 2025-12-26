@@ -56,5 +56,9 @@
      "your_company_name":"ឈ្មោះក្រុមហ៊ុនរបស់អ្នក",
      "your_company_en_name":"ឈ្មោះក្រុមហ៊ុនអង់គ្លេសរបស់អ្នក",
      "your_info":"ព័ត័មានរបស់អ្នក",
-     "this_field_is_required":"ប្រអប់នេះតម្រូវអោយមានតម្លៃ"
+     "this_field_is_required":"ប្រអប់នេះតម្រូវអោយមានតម្លៃ",
+     "chart":"តារាងទិន្នន័យ",
+     "active":"បើកដំណើរការ",
+     "disabled":"បិទ"
+
 }

@@ -1,15 +1,17 @@
 <template>
     <div class="ls-btn">
         <LSToolTip :title="prop.invalid?tr.this_field_is_required :''">
+            <label for="username" class="text-[14px] color-3" v-if="isShowLabel">{{ prop.label }}</label>
             <FloatLabel :variant="variant" class="relative"
                 >
                     <div v-if="inputType=='password'" @click="onPreviewPassowrd" class="absolute top-1/2 right-2 -translate-y-1/2 -translate-x-1/2">
                         <RiEyeCloseFill size="20px" v-if="!isShowPassword"/>
                         <RiEyeFill size="20px" v-else/>
                     </div>
-                    <InputText v-if="inputType=='password'" :type="isShowPassword?'text':'password'" v-model="dataModel" :invalid="prop.invalid && prop.required && hasChange" @input="onEnterValue" class=" w-full" :id="prop.label" />
-                    <InputText v-else :type="inputType" v-model="dataModel" :invalid="prop.invalid && prop.required && hasChange" @input="onEnterValue" class=" w-full" :id="prop.label" />
-                    <label :for="prop.label" :class="`${prop.invalid && prop.required && hasChange ?'text-red-500':'color-2'} text-[12px]`   ">{{ prop.label }} <span v-if="prop.required" class="text-red-500 text-[14px]">*</span> </label>
+                    <InputText v-if="inputType=='password'" :placeholder="placeholder" :type="isShowPassword?'text':'password'" v-model="dataModel" :invalid="prop.invalid && prop.required && hasChange" @input="onEnterValue" class="!h-[45px]  !text-[15px] w-full" :id="prop.label" />
+                    <InputText v-else-if="inputType !=='password' && isEmptyData(placeholder)" :type="inputType"  v-model="dataModel" :invalid="prop.invalid && prop.required && hasChange" @input="onEnterValue" class="!h-[45px] !text-[15px] w-full" :id="prop.label" />
+                    <InputText v-else :type="inputType" :placeholder="placeholder" v-model="dataModel" :invalid="prop.invalid && prop.required && hasChange" @input="onEnterValue" class="!h-[45px] w-full !text-[15px]" :id="prop.label" />
+                    <label :for="prop.label" :class="`${prop.invalid && prop.required && hasChange ?'text-red-500':'color-2'} text-[13px]`   ">{{ prop.label }} <span v-if="prop.required" class="text-red-500 text-[14px]">*</span> </label>
                 </FloatLabel>
                 <p class="text-[12px] text-red-500" v-if="prop.required && prop.invalid && hasChange">{{ tr.this_field_is_required }}</p>
         </LSToolTip>
@@ -22,8 +24,11 @@
     import { computed, ref, watch } from 'vue';
 import { useSystem } from '../../store/system';
 import {  RiEyeCloseFill, RiEyeFill } from '@remixicon/vue';
-    const prop = defineProps(["placeholder","label","ui","size","type","required","variant","invalid"])
+import { isEmptyData } from '../../utils/global_helper';
+    const prop = defineProps(["placeholder","label","ui","size","type","required","variant","invalid","isShowLabel"])
     const variant=computed(()=>prop.variant||'on')
+    const placeholder=computed(()=>prop.placeholder||'')
+    const isShowLabel =computed(()=>prop.isShowLabel||false)
     const inputType=computed(()=>prop.type||'text')
     const system = useSystem();
     const emit = defineEmits(["onTrackHasChange"])
@@ -52,7 +57,7 @@ import {  RiEyeCloseFill, RiEyeFill } from '@remixicon/vue';
 
     watch(isReset,()=>{
         if(hasChange.value) {
-            hasChange.value =true;
+            hasChange.value = false;
         }
         dataModel.value="";
     })

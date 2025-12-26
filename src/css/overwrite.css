@@ -1,0 +1,27 @@
+.dark .p-inputtext,.dark .p-textarea,.dark .p-select{
+    background: #ffffff0d !important;
+    border:1px solid #cbd5e11a !important;
+    font-size: 12px !important;
+    color: white !important;
+
+}
+.dark .p-select-sm .p-select-label{
+    color: white !important;
+}
+.p-textarea,.p-inputtext{
+    font-size: 12px !important;
+}
+.dark .p-floatlabel-on:has(input:focus) label, 
+.dark .p-floatlabel-on:has(input.p-filled) label, 
+.dark .p-floatlabel-on:has(input:-webkit-autofill) label, 
+.dark .p-floatlabel-on:has(textarea:focus) label, 
+.dark .p-floatlabel-on:has(textarea.p-filled) label, 
+.dark .p-floatlabel-on:has(.p-inputwrapper-focus) label, 
+.dark .p-floatlabel-on:has(.p-inputwrapper-filled) label, 
+.dark .p-floatlabel-on:has(input[placeholder]) label, 
+.dark .p-floatlabel-on:has(textarea[placeholder]) label{
+    background:#060606 !important;
+}
+.p-drawer-header{
+    padding-bottom: 3px !important;
+}

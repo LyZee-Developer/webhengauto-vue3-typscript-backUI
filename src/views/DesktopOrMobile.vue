@@ -12,6 +12,8 @@
             <ContentView v-else-if="content=='content'"></ContentView>
             <!-- //booking_appointment -->
             <BookingAppointmentView v-else-if="content=='booking_appointment'"></BookingAppointmentView>
+            <!-- //Chart -->
+            <ChartView v-else-if="content=='chart'"></ChartView>
         </WrapContentBody>
 </template>
 
@@ -29,10 +31,13 @@ import UserView from './user/UserView.vue';
 import SecurityPasswordView from './user/SecurityPasswordView.vue';
 import ContentView from './content/ContentView.vue';
 import BookingAppointmentView from './book_appointment/BookingAppointmentView.vue';
+import ChartView from './chart/ChartView.vue';
 
 const route = useRoute();
 var path = route.fullPath.split("/");
-const code = ref(path[path.length-1])
+console.log(path)
+const code = ref(path[path.length-1])  
+const parent = ref(path[path.length-2]) 
 const system = useSystem();
 const content = ref<string | undefined>(system.viewType);
 watch(system,()=>{
@@ -40,11 +45,15 @@ watch(system,()=>{
    content.value = system.viewType
 },{deep:true,immediate:true})
 onMounted(()=>{
-     var menus = menu_data.filter(val=>val.code==code.value);
+     var menus = path.length==3?menu_data.filter(val=>val.code==parent.value):menu_data.filter(val=>val.code==code.value);
     if(menus.length>0 ){
         menus.map((val)=>{
-            if(val.subMenu.length>0){
-                content.value = val.subMenu[0]?.code;
+            if(val.subMenu.length>0 && path.length==3){
+                var getCode = val.subMenu.find(s=>s.code==code.value)
+                content.value = getCode?.code;
+                system.setViewType(content.value || "");
+            }else{
+                content.value = menus[0]?.subMenu[0]?.code;
                 system.setViewType(content.value || "");
             }
         })

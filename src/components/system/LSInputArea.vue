@@ -1,6 +1,6 @@
 <template>
  <FloatLabel :variant="variant" >
-    <Textarea id="over_label"  :invalid="prop.invalid && hasChange" @input="onEnterValue" v-model="data" class="w-full" rows="2" cols="30" style="resize: none" />
+    <Textarea id="over_label"  :invalid="prop.invalid && hasChange" @input="onEnterValue" v-model="data" class=" !text-[15px] w-full" rows="2" cols="30" style="resize: none" />
     <label for="over_label" class="text-[12px]">{{ prop.label }}</label>
     <p class="text-[12px] text-red-500" v-if="prop.required && prop.invalid && hasChange">This feild is required!</p>
 </FloatLabel>
@@ -23,7 +23,7 @@ import { FloatLabel,Textarea } from 'primevue';
   },{deep:true,immediate:true})
    watch(isReset,()=>{
         if(hasChange.value) {
-            hasChange.value =true;
+            hasChange.value =false;
         }
         data.value="";
     })

@@ -6,23 +6,22 @@
   </div>
 </template>
 <script setup lang="ts">
-import { onMounted, watch } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { useSystem } from './store/system';
 import MobileMenuSlide from './components/system/MobileMenuSlide.vue';
 import { isEmptyData } from './utils/global_helper';
 import LSToast from './components/system/LSToast.vue';
 import { useRouter } from 'vue-router';
-
+  const router = useRouter();
   const system = useSystem();
-  const route = useRouter();
   onMounted(()=>{
       var lang = localStorage.getItem("lang")
-      route.push('/login')
-      if(lang!=null){
-        system.setCountry(JSON.parse(lang))
-      }
+      if(lang!=null)system.setCountry(JSON.parse(lang))
+      var isHasLogin = localStorage.getItem("isHasLogin");
+      if(isEmptyData(isHasLogin)) router.push('/login')
   })
   watch(system,()=>{
+     console.log("working33")
     var theme = localStorage.getItem("theme")
     var lang = localStorage.getItem("lang")
     if(!isEmptyData(theme)){

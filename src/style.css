@@ -3,6 +3,7 @@
 @import "tailwindcss";
 @import "tailwindcss-primeui";
 @import "./css/base-color.css";
+@import "./css/overwrite.css";
 
 *{
     font-family: "Battambang", system-ui;

@@ -1,4 +1,4 @@
-import {  RiAccountCircleLine, RiBookAiLine,  RiCarLine, RiLockPasswordLine, RiShapeLine, RiText, RiToolsLine, RiUserLine } from "@remixicon/vue";
+import {  RiAccountCircleLine, RiBarChartFill, RiBookAiLine,  RiCarLine, RiLockPasswordLine, RiShapeLine, RiText, RiToolsLine, RiUserLine } from "@remixicon/vue";
 import type { MenuType } from "../interface/menu_type";
 import type { Country } from "../interface/country_type";
 
@@ -85,6 +85,17 @@ const menu_data:MenuType[] = [
                 code:"booking_appointment",
                 title:"Booking Appointment",
                    icon:RiBookAiLine
+            }
+        ]
+    },
+     {
+        code:"chart",
+        title:"chart",
+        subMenu:[
+            {
+                code:"chart",
+                title:"chart",
+                icon:RiBarChartFill
             }
         ]
     },

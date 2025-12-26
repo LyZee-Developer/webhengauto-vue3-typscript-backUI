@@ -6,7 +6,7 @@
         <div v-else class="p-5 flex flex-col gap-y-3 max-[430px]:p-0">
             <div class="flex gap-5 items-center max-[430px]:flex-col ">
                 <div class="max-[430px]:w-[100px] relative max-[430px]:h-[100px] w-[80px] h-[80px] rounded-full max-[430px]:p-2 p-1 bd-card">
-                    <img :src="!isEmptyData(preview)?preview:'https://i.sstatic.net/y9DpT.jpg'" class="w-full h-full rounded-full" alt="">
+                    <img :src="!isEmptyData(preview)?preview:noImage" class="w-full h-full object-cover rounded-full" alt="">
                     <div @click="onClickUploadImage" :class="`absolute ${isScale?'scale-75':''} cursor-pointer ${style.tr200} bottom-[-10px] ${system.isDark?'bg-[#292929]':'bg-[#e7e7e7]'} right-0 flex justify-center items-center w-[35px] h-[35px] rounded-full`">
                         <RiCamera4Fill size="20px" class="color-system"/>
                     </div>
@@ -27,7 +27,7 @@
                 <RiPassportFill size="15px" class="color-system"/>
                 <div class="color-3 font-bold">{{ tr.your_info }}</div>
             </div>
-            <div class="grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-5">
+            <div class="grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-4">
                     <LSInput :label="tr.enter_name" :required="true" @onTrackHasChange="onTrackHasChange" v-model:isReset="isReset" v-model:verify="isCheck" :invalid="isEmptyData(values.name)" v-model="values.name"/>
                     <LSInput :label="tr.enter_english_name"  v-model:isReset="isReset" v-model="values.englishName"/>
                     <LSInput :label="tr.phone" :required="true" @onTrackHasChange="onTrackHasChange" v-model:isReset="isReset" v-model:verify="isCheck" v-model="values.phone" :invalid="isEmptyData(values.phone)"/>
@@ -44,10 +44,10 @@
                 <LSInputArea :label="tr.enter_description" v-model:isReset="isReset"  v-model:verify="isCheck" :required="true" @onTrackHasChange="onTrackHasChange" v-model="values.description"  :invalid="isEmptyData(values.description)"/>
                 <LSInputArea :label="tr.enter_en_description" v-model:isReset="isReset"  v-model="values.englishDescription"/>
             </div>
-            <div class="flex w-full justify-end flex-wrap  gap-3 items-center max-[430px]:flex-col">
-                <LSBtn :label="tr.cancel" type="cancel" @clickOnButton="clickOnButton"/>
-                <LSBtn label="Reset" type="reset" @clickOnButton="clickOnBtnReset"/>
-                <LSBtn :label="tr.save_info" type="save" @clickOnButton="onClickSave"/>
+            <div class="flex w-full justify-end flex-wrap  gap-3 items-center">
+                    <LSBtn :label="tr.cancel" type="cancel" @clickOnButton="clickOnButton"/>
+                    <LSBtn label="Reset" type="reset" @clickOnButton="clickOnBtnReset"/>
+                    <LSBtn :label="tr.save_info" type="save" @clickOnButton="onClickSave"/>
             </div>
         </div>
     </div>
@@ -63,6 +63,7 @@ import LSInputArea from '../../components/system/LSInputArea.vue';
 import { isEmptyData } from '../../utils/global_helper';
 import { useSystem } from '../../store/system';
 import { style } from '../../css/css';
+import noImage from '../../assets/system/no-image.jpg'
 const system = useSystem();
 const tr  = ref<Record<string,string>>({});
 const isHasInfo = ref<boolean>(true)

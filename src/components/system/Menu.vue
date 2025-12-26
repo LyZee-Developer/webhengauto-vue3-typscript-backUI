@@ -8,6 +8,7 @@
                         <RiUserSettingsFill size="40px" v-if="item.code=='user'"  class="color-3 hover-color-system"/>
                         <RiContactsBookFill size="40px" v-if="item.code=='content'"  class="color-3 hover-color-system"/>
                         <RiBookAiFill size="40px" v-if="item.code=='booking'"  class="color-3 hover-color-system"/>
+                        <RiBarChartFill size="40px" v-if="item.code=='chart'"  class="color-3 hover-color-system"/>
                 </div></RouterLink>
             </LSToolTip>
         </div>
@@ -15,7 +16,7 @@
 </template>
 
 <script setup lang="ts">
-import { RiBookAiFill, RiContactsBookFill, RiSettings4Fill, RiUserSettingsFill } from '@remixicon/vue';
+import { RiBarChartFill, RiBookAiFill, RiContactsBookFill, RiSettings4Fill, RiUserSettingsFill } from '@remixicon/vue';
 import { style } from '../../css/css';
 import LSToolTip from './LSToolTip.vue';
 import { menu_data } from '../../utils/system_data';

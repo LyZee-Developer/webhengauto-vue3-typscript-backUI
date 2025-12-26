@@ -56,5 +56,8 @@
       "your_company_name":"Your Company Name",
      "your_company_en_name":"Your Company English Name",
      "your_info":"Your Information",
-     "this_field_is_required":"This field is required!"
+     "this_field_is_required":"This field is required!",
+     "chart":"Chart",
+      "active":"Active",
+     "disabled":"Disabled"
 }

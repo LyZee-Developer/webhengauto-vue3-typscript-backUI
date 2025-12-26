@@ -2,7 +2,7 @@
   <div class="w-screen h-screen flex  gap-y-4 justify-center items-center ">
     <div class="bg-[#1231323] flex w-full max-w-[380px] max-[430px]:w-[340px] max-[430px]:gap-y-6 px-4 gap-y-3 flex-col">
       <div class="flex flex-col gap-2">
-        <div class="text-[30px] text-center font-bold">{{ !isLogin?"Login":"Sign up" }}</div>
+        <div class="text-[30px] text-center font-bold color-3">{{ !isLogin?"Login":"Sign up" }}</div>
         <p class="text-center color-2 text-[13px] font-normal" v-if="isLogin">Create new account</p>
         <p class="text-center color-2 text-[13px] font-normal" v-else>Please login your account for access our service</p>
       </div>
@@ -28,7 +28,7 @@
           v-model="confirm_password" 
            v-model:verify="verify"
           v-model:is-clear-error="isClearError"
-          :invalid="isEmptyData(password)"
+          :invalid="isEmptyData(confirm_password)"
           placeholder="Enter cornfirm password"
           :required="true"
              type="password"
@@ -61,26 +61,26 @@ const isLogin = ref<boolean>(false)
 const isClearError = ref<boolean>(false)
 const verify = ref<boolean>(false)
 const OnClickBtnLogin=()=>{
-  // dynamic.value = !dynamic.value;
-  // console.log("clicking the button",{dynamic:dynamic.value,username:username.value,password:password.value})
-  // 
   verify.value = !verify.value;
-  // system.setIsShowToast(!system.IsShowToast);
     if(isEmptyData(username.value) || isEmptyData(password.value)){
       ToastMessage({type:"error",detail: "Username or Password is required!"})
       return;
     }
     if(isLogin.value && isEmptyData(confirm_password.value)){
-      ToastMessage({type:"error",detail: "Username or Password is required!"})
+      ToastMessage({type:"error",detail: "Confirm is required!"})
       return;
     }
     if(username.value =="admin" && password.value=="Work@123"){
+        if(isLogin.value && password.value != confirm_password.value){
+          ToastMessage({type:"error",detail: "Password and Confirm are differenc value!"})
+          return;
+        }
         route.push('/')
         ToastMessage({type:"success",detail: "Username or Password is required!"})
+        localStorage.setItem("isHasLogin","Yes")
     }else{
       ToastMessage({type:"error",detail: "Your account is incorrect"})
     }
-  console.log("show")
 }
 const onSwitchLogin=()=>{
   isLogin.value=!isLogin.value;

@@ -58,6 +58,11 @@ const isShowIconMobile = ref<boolean>(path!="");
             system.setIsDark(!system.isDark)
            localStorage.setItem("theme",system.isDark?'dark':'white')
         }
+        else if(index==4) {
+            system.setIsDark(false)
+           localStorage.setItem("theme",'white')
+           localStorage.removeItem("isHasLogin")
+        }
         else if(index==1) {
             isShowCountry.value=!isShowCountry.value;
         }
