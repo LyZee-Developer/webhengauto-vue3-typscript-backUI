@@ -1,12 +1,12 @@
 <template>
-  <div class="relative" :class="`${system.isDark?'dark':''}`">
+  <div class="relative select-none" :class="`${system.isDark?'dark':''}`">
     <router-view></router-view>
     <mobile-menu-slide/>
     <LSToast/>
   </div>
 </template>
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue';
+import { onMounted, watch } from 'vue';
 import { useSystem } from './store/system';
 import MobileMenuSlide from './components/system/MobileMenuSlide.vue';
 import { isEmptyData } from './utils/global_helper';
