@@ -1,7 +1,7 @@
 <template>
     <div :class="`grid w-full h-full grid-rows-[80px_1fr] rounded-2xl max-[430px]:p-0 px-5 py-2 ${system.isDark?'min-[430px]:bg-black':'min-[430px]:bg-white'}`">
         <div class="font-bold flex gap-x-3 items-center w-full justify-between">
-            <div class="color-3 flex gap-x-3">
+            <div class="color-4 flex gap-x-3">
                 <RiUserCommunityFill size="20px"/>
                 <h1>Partner</h1>
             </div>
@@ -38,11 +38,11 @@
                 <div class="flex gap-x-6">
                     <div class="flex items-center gap-2">
                     <RadioButton v-model="status" inputId="Active"  name="active" value="active" />
-                    <label for="Active" class="text-[13px]">{{ tr.active }}</label>
+                    <label for="Active" class="text-[13px] color-3">{{ tr.active }}</label>
                     </div>
                     <div class="flex items-center gap-2">
                         <RadioButton v-model="status" inputId="Disabled" name="disabled" value="disabled" />
-                        <label for="Disabled" class="text-[13px]">{{ tr.disabled }}</label>
+                        <label for="Disabled" class="text-[13px] color-3">{{ tr.disabled }}</label>
                     </div>
                 </div>
             </div>

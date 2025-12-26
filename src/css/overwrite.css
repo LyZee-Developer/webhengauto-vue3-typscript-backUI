@@ -5,6 +5,16 @@
     color: white !important;
 
 }
+.dark .p-drawer{
+    background: #000000 !important;
+    border: 1px solid rgb(34, 34, 34);
+}
+.dark .p-radiobutton-box{
+    background: #262626 !important;
+}
+.dark .p-button-text.p-button-secondary:not(:disabled):hover{
+background: #f8fafc17 !important;
+}
 .dark .p-select-sm .p-select-label{
     color: white !important;
 }
@@ -24,4 +34,26 @@
 }
 .p-drawer-header{
     padding-bottom: 3px !important;
+}
+
+
+/* //button */
+.dark .p-button-secondary{
+    background: #262626 !important;
+    border: 1px solid #333333 !important;
+    color:white;
+}
+.dark .p-button-warn{
+    background: #5d3011 !important;
+    border: 1px solid #333333 !important;
+    color:white;
+}
+.dark .p-button-success{
+    background: #22c55e4a !important;
+    border: 1px solid #333333 !important;
+    color:white;
+}
+/* //radio */
+.dark .p-radiobutton-checked .p-radiobutton-box .p-radiobutton-icon{
+    background: #018790 !important;
 }

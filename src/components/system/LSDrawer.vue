@@ -1,7 +1,7 @@
 <template>
             <Drawer v-model:visible="isShowDrawer" class="max-[430px]:!w-[340px] !w-[400px]" position="right">
                 <template #header>
-                    <div class="text-[17px] font-bold">
+                    <div class="text-[17px] font-bold color-3">
                         <slot name="header"></slot>
                     </div>
                 </template>

@@ -8,9 +8,9 @@
                         <RiEyeCloseFill size="20px" v-if="!isShowPassword" class="color-1"/>
                         <RiEyeFill size="20px" v-else class="color-1"/>
                     </div>
-                    <InputText @keydown="onKeyDown" v-if="inputType=='password'" :placeholder="placeholder" :type="isShowPassword?'text':'password'" v-model="dataModel" :invalid="prop.invalid && prop.required && hasChange" @input="onEnterValue" class="!h-[45px]  !text-[15px] w-full" :id="prop.label" />
-                    <InputText @keydown="onKeyDown" v-else-if="inputType !=='password' && isEmptyData(placeholder)" :type="inputType"  v-model="dataModel" :invalid="prop.invalid && prop.required && hasChange" @input="onEnterValue" class="!h-[45px] !text-[15px] w-full" :id="prop.label" />
-                    <InputText @keydown="onKeyDown" v-else :type="inputType" :placeholder="placeholder" v-model="dataModel" :invalid="prop.invalid && prop.required && hasChange" @input="onEnterValue" class="!h-[45px] w-full !text-[15px]" :id="prop.label" />
+                    <InputText @keydown="onKeyDown" v-if="inputType=='password'" :placeholder="placeholder" :type="isShowPassword?'text':'password'" v-model="dataModel" :invalid="prop.invalid && prop.required && hasChange" @input="onEnterValue" class="!h-[45px]  !text-[14px] w-full" :id="prop.label" />
+                    <InputText @keydown="onKeyDown" v-else-if="inputType !=='password' && isEmptyData(placeholder)" :type="inputType"  v-model="dataModel" :invalid="prop.invalid && prop.required && hasChange" @input="onEnterValue" class="!h-[45px] !text-[14px] w-full" :id="prop.label" />
+                    <InputText @keydown="onKeyDown" v-else :type="inputType" :placeholder="placeholder" v-model="dataModel" :invalid="prop.invalid && prop.required && hasChange" @input="onEnterValue" class="!h-[45px] w-full !text-[14px]" :id="prop.label" />
                     <label :for="prop.label" :class="`${prop.invalid && prop.required && hasChange ?'text-red-500':'color-2'} text-[13px]`   ">{{ prop.label }} <span v-if="prop.required" class="text-red-500 text-[14px]">*</span> </label>
                 </FloatLabel>
                 <p class="text-[12px] text-red-500" v-if="prop.required && prop.invalid && hasChange">{{ tr.this_field_is_required }}</p>
