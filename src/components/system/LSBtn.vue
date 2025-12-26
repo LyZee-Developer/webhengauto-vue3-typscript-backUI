@@ -6,7 +6,7 @@
                 label: { class: 'text-[15px] font-medium' }
             }"
            :loading="prop.isLoading" icon="pi pi-search" @click="onClickButton" >
-            <template #icon>
+            <template #icon v-if="isHasIcon">
                 <RiSaveLine size="15px" class="font-medium" v-if="type.toLowerCase()=='save'"/>
                 <RiCloseLine size="15px" v-else-if="type.toLowerCase()=='cancel'"/>
                 <RiRefreshLine size="15px" v-else-if="type.toLowerCase()=='reset'"/>
@@ -19,8 +19,9 @@
     import { RiCloseLine, RiRefreshLine, RiSaveLine } from '@remixicon/vue'
 import { Button } from 'primevue'
 import { computed } from 'vue'
-    const prop = defineProps(["label","color","class","type","color","isLoading"])
+    const prop = defineProps(["label","color","class","type","color","isLoading","isHasIcon"])
     const emit = defineEmits(["clickOnButton"])
+    const isHasIcon = computed(()=>prop.isHasIcon|| false)
     const type = computed(()=>prop.type || "")
     const onClickButton=()=>{
         emit("clickOnButton")

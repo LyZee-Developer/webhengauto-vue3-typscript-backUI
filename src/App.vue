@@ -2,6 +2,7 @@
   <div class="relative" :class="`${system.isDark?'dark':''}`">
     <router-view></router-view>
     <mobile-menu-slide/>
+    <LSToast/>
   </div>
 </template>
 <script setup lang="ts">
@@ -9,6 +10,7 @@ import { onMounted, watch } from 'vue';
 import { useSystem } from './store/system';
 import MobileMenuSlide from './components/system/MobileMenuSlide.vue';
 import { isEmptyData } from './utils/global_helper';
+import LSToast from './components/system/LSToast.vue';
   const system = useSystem();
   onMounted(()=>{
       var lang = localStorage.getItem("lang")

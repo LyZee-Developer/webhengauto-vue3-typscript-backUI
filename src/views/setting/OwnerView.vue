@@ -1,5 +1,5 @@
 <template>
-    <div class="w-full h-full min-[430px]:bg-white  rounded-2xl">
+    <div :class="`w-full h-full ${!system.isDark?'min-[430px]:bg-white':'min-[430px]:bg-black'}  rounded-2xl`">
         <div v-if="!isHasInfo" class="w-full h-full flex justify-center items-center">
             <LSBtn type="info" label="ADD YOUR INFO WEBSITE" class="bg-system cursor-pointer" @clickOnButton="clickOnButton"/>
         </div>
@@ -7,7 +7,7 @@
             <div class="flex gap-5 items-center max-[430px]:flex-col ">
                 <div class="max-[430px]:w-[100px] relative max-[430px]:h-[100px] w-[80px] h-[80px] rounded-full max-[430px]:p-2 p-1 bd-card">
                     <img :src="!isEmptyData(preview)?preview:'https://i.sstatic.net/y9DpT.jpg'" class="w-full h-full rounded-full" alt="">
-                    <div @click="onClickUploadImage" class="absolute bottom-[-10px] right-0 flex justify-center items-center w-[35px] h-[35px] rounded-full" :class="`${system.isDark?'bg-[#292929]':'bg-[#e7e7e7]'}`">
+                    <div @click="onClickUploadImage" :class="`absolute ${isScale?'scale-75':''} cursor-pointer ${style.tr200} bottom-[-10px] ${system.isDark?'bg-[#292929]':'bg-[#e7e7e7]'} right-0 flex justify-center items-center w-[35px] h-[35px] rounded-full`">
                         <RiCamera4Fill size="20px" class="color-system"/>
                     </div>
                     <input type="file" class="hidden" ref="uploadImage" @change="onFileSelected"/>
@@ -40,7 +40,7 @@
                     <LSInput :label="tr.enter_telegram" v-model:verify="isCheck" :required="true"  @onTrackHasChange="onTrackHasChange" v-model:isReset="isReset" v-model="values.telegram" :invalid="isEmptyData(values.telegram)"/>
                     <LSInput :label="tr.enter_working_info" v-model:verify="isCheck" :required="true"  @onTrackHasChange="onTrackHasChange" v-model:isReset="isReset" v-model="values.workingInfo" :invalid="isEmptyData(values.workingInfo)"/>
             </div>
-            <div class="flex flex-col gap-y-5 mt-3">
+            <div class="flex flex-col gap-y-3 mt-3">
                 <LSInputArea :label="tr.enter_description" v-model:isReset="isReset"  v-model:verify="isCheck" :required="true" @onTrackHasChange="onTrackHasChange" v-model="values.description"  :invalid="isEmptyData(values.description)"/>
                 <LSInputArea :label="tr.enter_en_description" v-model:isReset="isReset"  v-model="values.englishDescription"/>
             </div>
@@ -62,11 +62,13 @@ import LSInput from '../../components/system/LSInput.vue';
 import LSInputArea from '../../components/system/LSInputArea.vue';
 import { isEmptyData } from '../../utils/global_helper';
 import { useSystem } from '../../store/system';
+import { style } from '../../css/css';
 const system = useSystem();
 const tr  = ref<Record<string,string>>({});
 const isHasInfo = ref<boolean>(true)
 const uploadImage = ref<HTMLInputElement | null>(null)
 const trackIsReset = ref<boolean>(false)
+const isScale = ref<boolean>(false)
 const preview = ref<string>("")
 const isCheck = ref<boolean>(false)
 const isReset = ref<boolean>(false)
@@ -79,6 +81,10 @@ const onFileSelected = (event: Event) => {
   preview.value = URL.createObjectURL(file.value)
 }
     const onClickUploadImage=()=>{
+        isScale.value = true;
+        setTimeout(()=>{
+            isScale.value=false;
+        },90)
         uploadImage.value?.click()
     }
     const values = ref({
