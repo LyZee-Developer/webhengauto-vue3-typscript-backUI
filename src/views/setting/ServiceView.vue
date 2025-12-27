@@ -3,52 +3,52 @@
         <div class="font-bold flex gap-x-3 items-center w-full justify-between">
             <div class="color-4 flex gap-x-3">
                 <RiToolsLine size="20px"/>
-                <h1>Service</h1>
+                <h1>{{ tr.service }}</h1>
             </div>
-            <div><LSBtn label="Create" type="add"  @click-on-button="onclickCreate" :isHasIcon="true"/></div>
+            <div><LSBtn :label="tr.create" type="add"  @click-on-button="onclickCreate" :isHasIcon="true"/></div>
         </div>
         <div class="w-full h-full">
             <div class="flex justify-between">
-                <Select size="small" v-model="selectedCity" :options="cities" optionLabel="name" placeholder="Select a City" class="w-[90px] h-[45px]" />
                 <div class="flex gap-x-3">
                     <div class="w-[45px] h-[45px] bg-card cursor-pointer rounded-lg flex justify-center items-center">
                         <RiRefreshLine size="18px" class="color-3"/>
                     </div>
-                    <div class="max-[430px]:w-[180px]"><LSInput placeholder="Search here..." /></div>
+                    <div class="max-[430px]:w-[180px]"><LSInput :placeholder="tr.search_here" v-model="searchtxt"/></div>
                 </div>
+                <div><LSBtn :label="tr.delete" type="delete" class="disabled" :is-disabled="!data_card.some(s=>s.isSelect==true)" @click-on-button="onClickButtonDelete" :isHasIcon="true"/></div>
             </div>
             <div class="grid pt-4 grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-4">
-                <div class="w-full rounded-lg p-3 bg-card" v-for="value in [1,2,3,4,5,1,2,3,4]">
+                <div @click="value.isSelect = !value.isSelect" :class="`w-full rounded-lg p-3 cursor-pointer bg-card ${value.isSelect?'bd-system':''}`" v-if="data_card.length>0" v-for="value in data_card">
                     <div class="flex gap-x-3">
-                        <div class="p-[4px] rounded-full bd-card w-[45px] h-[45px]">
-                            <img src="../../assets/flag/Flag_of_Cambodia.svg.webp" class="w-full h-full rounded-full object-cover" alt="">
-                        </div>
                         <div class="flex flex-col gap-y-1">
-                            <div class="text-[15px] color-4">Sabay</div>
-                            <div class="text-[13px] color-2">Sabay</div>
+                            <div class="text-[15px] color-4">{{ value.Name }}</div>
+                            <div class="text-[13px] color-2">{{ value.EnglishName }}</div>
                         </div>
-                       
                     </div>
                     <div class="w-full flex justify-end color-3 text-[12px]">
                             <span>@lyzee</span><span>{{ moment().format('LL') }}</span>
                     </div>
                 </div>
+                <div v-else class="w-full rounded-lg color-2 p-3 h-[100px] flex justify-center items-center bg-card">
+                    {{ tr.no_data_available }}
+                </div>
             </div>
+            <LSPagination :row-btn="5" :total-record="partner_data.length" class="mt-4 flex justify-end max-[430px]:justify-center" @onSelectPage="onSelectPage"/>
         </div>
         <LSDrawer v-model="isShowDrawer">
             <template #header>
-                Create new partner
+                {{ tr.create }}
             </template>
             <div class="mt-3 flex flex-col gap-y-6">
                 <LSInput
-                 label="Name" 
+                 :label="tr.enter_name" 
                 :invalid="isEmptyData(data.Name)" 
                 :required="true" 
                 v-model:verify="verify"
                 v-model:is-reset="isReset"
                 v-model="data.Name" />
                 <LSInput 
-                label="English Name" 
+                :label="tr.enter_english_name" 
                 v-model:verify="verify"
                 v-model:is-reset="isReset"
                 :invalid="isEmptyData(data.EnglishName)" 
@@ -78,218 +78,54 @@
 </template>
 
 <script setup lang="ts">
-import {  RiRefreshLine, RiToolsLine, RiUserCommunityFill } from '@remixicon/vue';
-import { ref, watch } from 'vue';
-import { Select ,RadioButton ,DataTable,Column} from 'primevue';
+import {  RiRefreshLine, RiToolsLine } from '@remixicon/vue';
+import { onMounted, ref, watch } from 'vue';
+import {  RadioButton , type PageState} from 'primevue';
 import LSInput from '../../components/system/LSInput.vue';
 import { useSystem } from '../../store/system';
 import LSBtn from '../../components/system/LSBtn.vue';
 import moment from 'moment';
+
 import LSDrawer from '../../components/system/LSDrawer.vue';
 import { isEmptyData } from '../../utils/global_helper';
+import LSPagination from '../../components/system/LSPagination.vue';
+import { partner_data } from '../../data_fix/partner_fix';
+import { car_fix } from '../../data_fix/car_fix';
+import { service_data } from '../../data_fix/service_fix';
+import type { ServiceType } from '../../interface/service_type';
 const system = useSystem();
 const tr  = ref<Record<string,string>>({});
 const isShowDrawer=ref<boolean>(false);
+const data_card=ref<ServiceType[]>([]);
 const isCreate=ref<boolean>(false);
 const isReset=ref<boolean>(false);
 const verify=ref<boolean>(false);
-const customers=ref([
-    {
-        country:"Hong",
-        name:"Hong2",
-    },
-    {
-        country:"Hong",
-        name:"Hong2",
-    },
-    {
-        country:"Hong",
-        name:"Hong2",
-    },
-    {
-        country:"Hong",
-        name:"Hong2",
-    },
-    {
-        country:"Hong",
-        name:"Hong2",
-    },
-    {
-        country:"Hong",
-        name:"Hong2",
-    },
-    {
-        country:"Hong",
-        name:"Hong2",
-    },
-    {
-        country:"Hong",
-        name:"Hong2",
-    },
-    {
-        country:"Hong",
-        name:"Hong2",
-    },
-    {
-        country:"Hong",
-        name:"Hong2",
-    },
-    {
-        country:"Hong",
-        name:"Hong2",
-    },
-    {
-        country:"Hong",
-        name:"Hong2",
-    },
-    {
-        country:"Hong",
-        name:"Hong2",
-    },
-    {
-        country:"Hong",
-        name:"Hong2",
-    },
-    {
-        country:"Hong",
-        name:"Hong2",
-    },
-    {
-        country:"Hong",
-        name:"Hong2",
-    },
-    {
-        country:"Hong",
-        name:"Hong2",
-    },
-    {
-        country:"Hong",
-        name:"Hong2",
-    },
-    {
-        country:"Hong",
-        name:"Hong2",
-    },
-    {
-        country:"Hong",
-        name:"Hong2",
-    },
-    {
-        country:"Hong",
-        name:"Hong2",
-    },
-    {
-        country:"Hong",
-        name:"Hong2",
-    },
-    {
-        country:"Hong",
-        name:"Hong2",
-    },
-    {
-        country:"Hong",
-        name:"Hong2",
-    },
-    {
-        country:"Hong",
-        name:"Hong2",
-    },
-    {
-        country:"Hong",
-        name:"Hong2",
-    },
-    {
-        country:"Hong",
-        name:"Hong2",
-    },
-    {
-        country:"Hong",
-        name:"Hong2",
-    },
-    {
-        country:"Hong",
-        name:"Hong2",
-    },
-    {
-        country:"Hong",
-        name:"Hong2",
-    },
-    {
-        country:"Hong",
-        name:"Hong2",
-    },
-    {
-        country:"Hong",
-        name:"Hong2",
-    },
-    {
-        country:"Hong",
-        name:"Hong2",
-    },
-    {
-        country:"Hong",
-        name:"Hong2",
-    },
-    {
-        country:"Hong",
-        name:"Hong2",
-    },
-    {
-        country:"Hong",
-        name:"Hong2",
-    },
-    {
-        country:"Hong",
-        name:"Hong2",
-    },
-    {
-        country:"Hong",
-        name:"Hong2",
-    },
-    {
-        country:"Hong",
-        name:"Hong2",
-    },
-    {
-        country:"Hong",
-        name:"Hong2",
-    },
-    {
-        country:"Hong",
-        name:"Hong2",
-    },
-    {
-        country:"Hong",
-        name:"Hong2",
-    },
-    {
-        country:"Hong",
-        name:"Hong2",
-    },
-    {
-        country:"Hong",
-        name:"Hong2",
-    },
-]);
+const searchtxt=ref<string>("");
 const status=ref<string>("active");
 const data =ref({
     Name:"",
     EnglishName:"",
     IsDisabled:false,
 })
+onMounted(()=>{
+    data_card.value = service_data.slice(0,10)
+})
+watch(searchtxt,()=>{
+    if(!isEmptyData(searchtxt.value)){
+        data_card.value = service_data.filter((val)=>val.Name.includes(searchtxt.value) || val.EnglishName.includes(searchtxt.value) );
+    }else data_card.value = service_data.splice(0,10);
+})
+const onClickButtonDelete=()=>{
+}
 const onClickButtonSave=()=>{
     verify.value = !verify.value;
+}
+const onSelectPage=(page:PageState)=>{
+    data_card.value = car_fix.slice(page.page,page.rows)
 }
 const onClickButtonReset=()=>{
     isReset.value = !isReset.value;
 }
-const selectedCity = ref({ name: '10', code: '10' });
-const cities = ref([
-    { name: '10', code: '10' },
-    { name: '20', code: '20' },
-    { name: '50', code: '50' },
-    { name: '100', code: '100' },
-]);
 
 const onclickCreate=()=>{
     isCreate.value = true;

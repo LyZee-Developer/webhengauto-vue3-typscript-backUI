@@ -11,6 +11,8 @@ export const useSystem = defineStore("system",{
         isCollapseLeft:false,
         isShowMobileMenuSlide:false,
         viewType:"",
+        PathImage:"",
+        IsShowImage:false,
         language:{},
         country:{},
         IsShowToast:false,
@@ -60,6 +62,12 @@ export const useSystem = defineStore("system",{
         },
         setIsShowToast(IsShowToast:boolean){
             this.IsShowToast = IsShowToast;
+        },
+        setPathImage(pathImage:string){
+            this.PathImage = pathImage;
+        },
+        setIsShowImage(isShowImage:boolean){
+            this.IsShowImage = isShowImage;
         }
     }
 })

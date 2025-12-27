@@ -59,5 +59,9 @@
      "this_field_is_required":"This field is required!",
      "chart":"Chart",
       "active":"Active",
-     "disabled":"Disabled"
+     "disabled":"Disabled",
+     "create":"Create",
+     "delete":"Delete",
+     "search_here":"Search here",
+      "no_data_available":"No data available"
 }

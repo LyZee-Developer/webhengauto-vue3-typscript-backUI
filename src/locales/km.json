@@ -59,6 +59,10 @@
      "this_field_is_required":"ប្រអប់នេះតម្រូវអោយមានតម្លៃ",
      "chart":"តារាងទិន្នន័យ",
      "active":"បើកដំណើរការ",
-     "disabled":"បិទ"
+     "disabled":"បិទ",
+     "create":"បង្កើត",
+     "delete":"លុប",
+     "search_here":"ស្វែងរក",
+     "no_data_available":"មិនមានទិន្នន័យ"
 
 }

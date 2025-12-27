@@ -1,6 +1,6 @@
 <template>
-    <div class=" top-0 bg-[#00000089]  min-[430px]:hidden h-full w-full fixed" 
-    :class="`${!system.isShowMobileMenuSlide?'left-[-400px]':'left-0'}`"
+    <div class=" top-0 bg-[#00000089]  min-[430px]:hidden h-full w-full z-20 fixed" 
+    :class="`${!system.isShowMobileMenuSlide?'left-[-420px]':'left-0'}`"
     >
         <div 
             class="w-[300px] max-[360px]:w-full bg-black h-full fixed  top-0" 

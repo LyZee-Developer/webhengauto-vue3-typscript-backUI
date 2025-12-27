@@ -3,6 +3,7 @@
     <router-view></router-view>
     <mobile-menu-slide/>
     <LSToast/>
+    <LSPreviewImage/>
   </div>
 </template>
 <script setup lang="ts">
@@ -12,6 +13,7 @@ import MobileMenuSlide from './components/system/MobileMenuSlide.vue';
 import { isEmptyData } from './utils/global_helper';
 import LSToast from './components/system/LSToast.vue';
 import { useRouter } from 'vue-router';
+import LSPreviewImage from './components/system/LSPreviewImage.vue';
   const router = useRouter();
   const system = useSystem();
   onMounted(()=>{

@@ -6,6 +6,8 @@ export interface SystemType {
   isCollapseLeft: boolean,
   isShowMobileMenuSlide: boolean,
   viewType: string,
+  PathImage: string,
+  IsShowImage: boolean,
   language: Record<string, string>,
   country:Country,
   IsShowToast:boolean,

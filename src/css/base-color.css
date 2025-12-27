@@ -70,6 +70,9 @@ body{
 .bd-card{
     border: 1px solid var(--bd-color) !important;
 }
+.bd-system{
+    border: 1px solid var(--system) !important;
+}
 .bg-system{
     background: var(--system) !important;
 }
