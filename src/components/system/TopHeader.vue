@@ -1,5 +1,5 @@
 <template>
-    <div class="w-full flex justify-between items-center h-full max-[430px]:fixed max-[430px]:left-0 max-[430px]:top-[-2px] max-[430px]:h-[60px] max-[430px]:z-10  bg-system px-3 ">   
+    <div :class="`w-full flex justify-between items-center h-full ${isShowIconMobile?`max-[430px]:fixed max-[430px]:left-0 max-[430px]:top-[-2px] max-[430px]:h-[60px] max-[430px]:z-10`:``}   bg-system px-3 `">   
             <div class="h-full">
                 <img src="../../assets/logo/logor.png" class="w-full h-full" alt="">
             </div>
