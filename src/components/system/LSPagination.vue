@@ -13,7 +13,7 @@ const onSelectPage=(page:PageState)=>{
     emit("onSelectPage",page)
 }
 const onFirstChange=(page:number)=>{
-    console.log("first",page)
+    console.log("first1",page)
 }
 </script>
 
