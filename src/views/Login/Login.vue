@@ -85,7 +85,7 @@ const OnClickBtnLogin=()=>{
           return;
         }
         route.push('/')
-        ToastMessage({type:"success",detail: "Username or Password is required!"})
+        ToastMessage({type:"success",detail: "Login successfully!"})
         localStorage.setItem("isHasLogin","Yes")
     }else{
       ToastMessage({type:"error",detail: "Your account is incorrect"})
