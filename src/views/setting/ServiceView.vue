@@ -80,7 +80,7 @@
 <script setup lang="ts">
 import {  RiRefreshLine, RiToolsLine } from '@remixicon/vue';
 import { onMounted, ref, watch } from 'vue';
-import {  RadioButton , useConfirm, type PageState} from 'primevue';
+import {  RadioButton , type PageState} from 'primevue';
 import LSInput from '../../components/system/LSInput.vue';
 import { useSystem } from '../../store/system';
 import LSBtn from '../../components/system/LSBtn.vue';
