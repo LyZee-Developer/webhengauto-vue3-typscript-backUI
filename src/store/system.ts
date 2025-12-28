@@ -4,6 +4,7 @@ import type { SystemType } from "../interface/system_type";
 import type { Country } from "../interface/country_type";
 import type { ToastType } from "../interface/toast_type";
 import { isEmptyData } from "../utils/global_helper";
+import type { ConfirmType } from "../interface/confirm_type";
 
 export const useSystem = defineStore("system",{
     state:()=>({
@@ -13,6 +14,7 @@ export const useSystem = defineStore("system",{
         viewType:"",
         PathImage:"",
         IsShowImage:false,
+        IsShowConfirm:false,
         language:{},
         country:{},
         IsShowToast:false,
@@ -22,6 +24,11 @@ export const useSystem = defineStore("system",{
             label:"Successfully",
             position:"bottom-right",
             type:"success" //info error success warn
+        },
+        confirm:{
+            message:"Do you want to save",
+            title:"Confirm",
+            type:"save",
         }
     } as SystemType),
     getters:{
@@ -60,6 +67,19 @@ export const useSystem = defineStore("system",{
             }
             if(!isEmptyData(toast.position)) this.toastData.position = toast.position;
         },
+        setConfirm(confirm:ConfirmType){
+            if(!isEmptyData(confirm.message)) this.confirm.message = confirm.message;
+            if(!isEmptyData(confirm.title)) this.confirm.title = confirm.title;
+            if(!isEmptyData(confirm.type)) {
+                if(confirm.type=="save") this.confirm.icon = "pi pi-exclamation-circle";
+                if(confirm.type=="delete") this.confirm.icon = "pi pi-trash";
+                if(confirm.type=="warn") this.confirm.icon = " pi pi-exclamation-triangle";
+                if(confirm.type=="info") this.confirm.icon = "pi pi-question-circle";
+                this.confirm.type = confirm.type;
+            }
+            if(confirm.onSave) this.confirm.onSave = confirm.onSave;
+            if(confirm.onCancel) this.confirm.onCancel = confirm.onCancel;
+        },
         setIsShowToast(IsShowToast:boolean){
             this.IsShowToast = IsShowToast;
         },
@@ -68,6 +88,9 @@ export const useSystem = defineStore("system",{
         },
         setIsShowImage(isShowImage:boolean){
             this.IsShowImage = isShowImage;
+        },
+        setIsShowConfirm(IsShow:boolean){
+            this.IsShowConfirm = IsShow;
         }
     }
 })

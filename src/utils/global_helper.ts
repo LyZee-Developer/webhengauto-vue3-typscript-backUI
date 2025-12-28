@@ -1,3 +1,4 @@
+import { useConfirm } from "primevue";
 import type { ToastType } from "../interface/toast_type";
 import { useSystem } from "../store/system";
 
@@ -21,5 +22,6 @@ const ToastMessage=(message:ToastType)=>{
     })
     system.setIsShowToast(true) 
 }
+
 
 export {translate,isEmptyData,ToastMessage};

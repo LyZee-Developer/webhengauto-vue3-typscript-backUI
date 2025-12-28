@@ -12,7 +12,8 @@
                          <RiGlobalLine size="20px" class="text-white"/>
                      </LSToolTip>
                       <LSToolTip v-if="item==4" :title="tr.logout">
-                          <RouterLink to="/login" ><RiLockLine size="20px" class="text-white"/></RouterLink>
+                            <RiLockLine size="20px" class="text-white"/>
+                          <!-- <RouterLink to="/login" ><RiLockLine size="20px" class="text-white"/></RouterLink> -->
                       </LSToolTip>
                        <LSToolTip v-if="item==2" :title="tr.theme">
                            <div>
@@ -42,13 +43,14 @@ import { ref, watch } from 'vue';
 import { useSystem } from '../../store/system';
 import { style } from '../../css/css';
 import LSToolTip from './LSToolTip.vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { countrys } from '../../utils/system_data';
 import type { Country } from '../../interface/country_type';
 import { translate } from '../../utils/global_helper';
 const route = useRoute();
 const path = route.fullPath.split("/")[1];
 const isShowCountry = ref<boolean>(false)
+const router = useRouter();
 const isShowIconMobile = ref<boolean>(path!="");
     const system = useSystem();
     const tr= ref();
@@ -59,9 +61,21 @@ const isShowIconMobile = ref<boolean>(path!="");
            localStorage.setItem("theme",system.isDark?'dark':'white')
         }
         else if(index==4) {
-            system.setIsDark(false)
-           localStorage.setItem("theme",'white')
-           localStorage.removeItem("isHasLogin")
+            system.setConfirm({
+                message:"Are you sure! Do you want to exit?",
+                type:"save",
+                onCancel :()=> {
+                    console.log("cancel")
+                },
+                onSave:()=>{
+                    router.push("/login");
+                    system.setIsDark(false)
+                    localStorage.setItem("theme",'white')
+                    localStorage.removeItem("isHasLogin")
+                }
+            })
+            system.setIsShowConfirm(true)
+            
         }
         else if(index==1) {
             isShowCountry.value=!isShowCountry.value;

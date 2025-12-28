@@ -1,3 +1,4 @@
+import type { ConfirmType } from "./confirm_type";
 import type { Country } from "./country_type";
 import type { ToastType } from "./toast_type";
 
@@ -8,8 +9,10 @@ export interface SystemType {
   viewType: string,
   PathImage: string,
   IsShowImage: boolean,
+  IsShowConfirm: boolean,
   language: Record<string, string>,
   country:Country,
   IsShowToast:boolean,
-  toastData:ToastType
+  toastData:ToastType,
+  confirm:ConfirmType,
 }

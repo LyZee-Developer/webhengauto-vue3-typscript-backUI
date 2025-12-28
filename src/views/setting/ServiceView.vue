@@ -80,14 +80,14 @@
 <script setup lang="ts">
 import {  RiRefreshLine, RiToolsLine } from '@remixicon/vue';
 import { onMounted, ref, watch } from 'vue';
-import {  RadioButton , type PageState} from 'primevue';
+import {  RadioButton , useConfirm, type PageState} from 'primevue';
 import LSInput from '../../components/system/LSInput.vue';
 import { useSystem } from '../../store/system';
 import LSBtn from '../../components/system/LSBtn.vue';
 import moment from 'moment';
 
 import LSDrawer from '../../components/system/LSDrawer.vue';
-import { isEmptyData } from '../../utils/global_helper';
+import { isEmptyData,  } from '../../utils/global_helper';
 import LSPagination from '../../components/system/LSPagination.vue';
 import { partner_data } from '../../data_fix/partner_fix';
 import { car_fix } from '../../data_fix/car_fix';
@@ -116,6 +116,17 @@ watch(searchtxt,()=>{
     }else data_card.value = service_data.splice(0,10);
 })
 const onClickButtonDelete=()=>{
+    system.setConfirm({
+        message:"Do you want to delete service?",
+        type:"delete",
+        onCancel :()=> {
+            console.log("cancel")
+        },
+        onSave:()=>{
+            console.log("save")
+        }
+    })
+    system.setIsShowConfirm(true)
 }
 const onClickButtonSave=()=>{
     verify.value = !verify.value;
