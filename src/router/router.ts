@@ -7,16 +7,12 @@ import { menu_data } from '../utils/system_data';
 
 const routes: RouteRecordRaw[] = [
   {
-    path: '/',
-    redirect: '/login',
-  },
-  {
     path: '/login',
     name: 'Login',
     component: Login,
   },
   {
-    path: '/home',
+    path: '/',
     name: 'Home',
     component: HomePage,
   },
