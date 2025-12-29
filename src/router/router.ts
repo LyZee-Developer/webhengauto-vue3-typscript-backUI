@@ -1,9 +1,9 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router';
-import NotFound from '../views/NotFound/NotFound.vue';
+// import NotFound from '../views/NotFound/NotFound.vue';
 import Login from '../views/Login/Login.vue';
 import HomePage from '../views/Home.vue';
 import DesktopOrMobile from '../views/DesktopOrMobile.vue';
-import { menu_data } from '../utils/system_data';
+// import { menu_data } from '../utils/system_data';
 
 const routes: RouteRecordRaw[] = [
   {
