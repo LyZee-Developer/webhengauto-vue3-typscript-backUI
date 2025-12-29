@@ -1,5 +1,6 @@
 <template>
         <WrapContentBody>
+            
             <!-- //Setting -->
             <OwnerView v-if="content=='owner'"></OwnerView>
             <PartnerView v-else-if="content=='partner'"></PartnerView>

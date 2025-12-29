@@ -16,23 +16,33 @@ const routes: RouteRecordRaw[] = [
     name: 'Home',
     component: HomePage,
   },
-  ...menu_data.map(val => ({
-    path: `/${val.code}`,
-    name: `menu-${val.code}`,
-    component: DesktopOrMobile,
-  })),
-  ...menu_data.flatMap(menu =>
-    menu.subMenu.map(sub => ({
-      path: `/${menu.code}/${sub.code}`,
-      name: `menu-${menu.code}-${sub.code}`,
-      component: DesktopOrMobile,
-    }))
-  ),
   {
-    path: '/:pathMatch(.*)*',
-    name: 'NotFound',
-    component: NotFound,
+    path: `/setting`,
+    name: `menu-setting`,
+    component: DesktopOrMobile,
   },
+  {
+    path: `/setting/owner`,
+    name: `menu-owner`,
+    component: DesktopOrMobile,
+  },
+  // ...menu_data.map(val => ({
+  //   path: `/${val.code}`,
+  //   name: `menu-${val.code}`,
+  //   component: DesktopOrMobile,
+  // })),
+  // ...menu_data.flatMap(menu =>
+  //   menu.subMenu.map(sub => ({
+  //     path: `/${menu.code}/${sub.code}`,
+  //     name: `menu-${menu.code}-${sub.code}`,
+  //     component: DesktopOrMobile,
+  //   }))
+  // ),
+  // {
+  //   path: '/:pathMatch(.*)*',
+  //   name: 'NotFound',
+  //   component: NotFound,
+  // },
 ];
 
 const router = createRouter({
