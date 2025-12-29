@@ -33,7 +33,6 @@
             </div>
             <div class="w-full h-full  py-3 pr-4 max-[430px]:p-0">
                 <div class="w-full rounded-2xl max-[430px]:mt-[60px]  p-6 h-full bg-card wrapContent ">
-                    <h1>Stting</h1>
                     <slot></slot>
                 </div>
             </div>

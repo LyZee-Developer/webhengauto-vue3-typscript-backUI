@@ -68,6 +68,7 @@
                         <label for="Disabled" class="text-[13px] color-3">{{ tr.disabled }}</label>
                     </div>
                 </div>
+                <LSUpload />
             </div>
             <template #footer>
                 <div class="flex gap-x-3 justify-end">
@@ -95,6 +96,7 @@ import LSPagination from '../../components/system/LSPagination.vue';
 import { partner_data } from '../../data_fix/partner_fix';
 import type { PartnerType } from '../../interface/partner_type';
 import { car_fix } from '../../data_fix/car_fix';
+import LSUpload from '../../components/system/LSUpload.vue';
 const system = useSystem();
 const tr  = ref<Record<string,string>>({});
 const isShowDrawer=ref<boolean>(false);
@@ -102,12 +104,14 @@ const data_card=ref<PartnerType[]>([]);
 const selectedCard=ref<PartnerType[]>([]);
 const isCreate=ref<boolean>(false);
 const isReset=ref<boolean>(false);
+
 const verify=ref<boolean>(false);
 const searchtxt=ref<string>("");
 const onClickImage=(value:PartnerType)=>{
     system.setPathImage(value.PathURL)
     system.setIsShowImage(true)
 }
+
 const status=ref<string>("active");
 const data =ref({
     Name:"",

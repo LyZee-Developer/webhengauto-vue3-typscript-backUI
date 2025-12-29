@@ -76,3 +76,10 @@ background: #f8fafc17 !important;
     background: #26262600 !important;
     border: 1px solid #33333300 !important;
 }
+
+.truncate {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  width: 200px; /* or a percentage, max-width, etc. */
+}

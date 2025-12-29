@@ -58,6 +58,7 @@
                 :required="true"
                  v-model="data.EnglishName"
                  />
+
                 <div class="flex gap-x-6">
                     <div class="flex items-center gap-2">
                     <RadioButton v-model="status" inputId="Active"  name="active" value="active" />
@@ -68,6 +69,7 @@
                         <label for="Disabled" class="text-[13px] color-3">{{ tr.disabled }}</label>
                     </div>
                 </div>
+                <LSUpload />
             </div>
             <template #footer>
                 <div class="flex gap-x-3 justify-end">
@@ -94,6 +96,7 @@ import { isEmptyData } from '../../utils/global_helper';
 import LSPagination from '../../components/system/LSPagination.vue';
 import { partner_data } from '../../data_fix/partner_fix';
 import type { PartnerType } from '../../interface/partner_type';
+import LSUpload from '../../components/system/LSUpload.vue';
 const system = useSystem();
 const tr  = ref<Record<string,string>>({});
 const isShowDrawer=ref<boolean>(false);
