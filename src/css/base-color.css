@@ -14,6 +14,7 @@
     --bg-constra-card:#414141;
     --loading:#d5d5d561;
     --bd-color : #c9c9c9;
+    --bd-color-1 : #c9c9c969;
     --bg-card-1:#4141416b;
     --bd-constra-color : #414141;
      --bd-color-100 : #edededa6;
@@ -37,6 +38,7 @@
     --hover-bg-constra-card:#6363632b;
     --loading:#d9d6d61a;
     --bd-color : #414141;
+    --bd-color-1 : #41414170;
     --bd-constra-color : #c9c9c9;
     --bd-color-100 : #161616;
 }
@@ -69,6 +71,9 @@ body{
 }
 .bd-card{
     border: 1px solid var(--bd-color) !important;
+}
+.bd-card-1{
+    border: 1px solid var(--bd-color-1) !important;
 }
 .bd-system{
     border: 1px solid var(--system) !important;

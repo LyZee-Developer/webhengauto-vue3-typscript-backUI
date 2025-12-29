@@ -71,3 +71,8 @@ background: #f8fafc17 !important;
     background:  #373737 !important;
     color:white;
 }
+
+.dark .p-button-secondary{
+    background: #26262600 !important;
+    border: 1px solid #33333300 !important;
+}

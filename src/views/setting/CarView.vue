@@ -8,7 +8,7 @@
             <div><LSBtn :label="tr.create" type="add"  @click-on-button="onclickCreate" :isHasIcon="true"/></div>
         </div>
         <div class="w-full h-full">
-            <div class="flex justify-between">
+            <div class="flex justify-between flex-wrap items-center gap-y-2">
                 <div class="flex gap-x-3">
                     <div class="w-[45px] h-[45px] bg-card cursor-pointer rounded-lg flex justify-center items-center">
                         <RiRefreshLine size="18px" class="color-3"/>
@@ -18,7 +18,7 @@
                 <div><LSBtn :label="tr.delete" type="delete" class="disabled" :is-disabled="!data_card.some(s=>s.isSelect==true)" @click-on-button="onClickButtonDelete" :isHasIcon="true"/></div>
             </div>
             <div class="grid pt-4 grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-4">
-                <div @click="value.isSelect = !value.isSelect" :class="`w-full rounded-lg p-3 cursor-pointer bg-card ${value.isSelect?'bd-system':''}`" v-if="data_card.length>0" v-for="value in data_card">
+                <div @click="()=>onSelectService(value)" :class="`w-full rounded-2xl p-3 cursor-pointer bd-card-1 ${value.isSelect?'bd-system':''}`" v-if="data_card.length>0" v-for="value in data_card">
                     <div class="flex gap-x-3">
                         <div @click="()=>{onClickImage(value)}" class="p-[4px] rounded-full bd-card w-[45px] h-[45px]">
                             <img  :src="value.PathURL" class="w-full h-full rounded-full object-cover" alt="">
@@ -99,6 +99,7 @@ const system = useSystem();
 const tr  = ref<Record<string,string>>({});
 const isShowDrawer=ref<boolean>(false);
 const data_card=ref<PartnerType[]>([]);
+const selectedCard=ref<PartnerType[]>([]);
 const isCreate=ref<boolean>(false);
 const isReset=ref<boolean>(false);
 const verify=ref<boolean>(false);
@@ -116,12 +117,29 @@ const data =ref({
 onMounted(()=>{
     data_card.value = car_fix.slice(0,10)
 })
+const onSelectService=(data:PartnerType)=>{
+    data.isSelect = !data.isSelect;
+    if(data.isSelect) selectedCard.value.push(data);
+    else selectedCard.value=selectedCard.value.filter(s=>s.EnglishName!=data.EnglishName)
+    console.log(selectedCard.value)
+}
 watch(searchtxt,()=>{
     if(!isEmptyData(searchtxt.value)){
         data_card.value = car_fix.filter((val)=>val.Name.includes(searchtxt.value) || val.EnglishName.includes(searchtxt.value) );
     }else data_card.value = car_fix.splice(0,10);
 })
 const onClickButtonDelete=()=>{
+    system.setConfirm({
+        message:"Do you want to delete car?",
+        type:"delete",
+        onCancel :()=> {
+            console.log("cancel")
+        },
+        onSave:()=>{
+            data_card.value =  data_card.value.filter(s=>!selectedCard.value.map(val=>val.EnglishName).includes(s.EnglishName)) 
+        }
+    })
+    system.setIsShowConfirm(true)
 }
 const onClickButtonSave=()=>{
     verify.value = !verify.value;

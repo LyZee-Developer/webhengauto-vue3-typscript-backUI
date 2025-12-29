@@ -8,7 +8,7 @@
             <div><LSBtn :label="tr.create" type="add"  @click-on-button="onclickCreate" :isHasIcon="true"/></div>
         </div>
         <div class="w-full h-full">
-            <div class="flex justify-between">
+            <div class="flex justify-between flex-wrap items-center gap-y-2">
                 <div class="flex gap-x-3">
                     <div class="w-[45px] h-[45px] bg-card cursor-pointer rounded-lg flex justify-center items-center">
                         <RiRefreshLine size="18px" class="color-3"/>
@@ -18,7 +18,10 @@
                 <div><LSBtn :label="tr.delete" type="delete" class="disabled" :is-disabled="!data_card.some(s=>s.isSelect==true)" @click-on-button="onClickButtonDelete" :isHasIcon="true"/></div>
             </div>
             <div class="grid pt-4 grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-4">
-                <div @click="value.isSelect = !value.isSelect" :class="`w-full rounded-lg p-3 cursor-pointer bg-card ${value.isSelect?'bd-system':''}`" v-if="data_card.length>0" v-for="value in data_card">
+                <div @click="()=>onSelectService(value)" 
+                :class="`w-full rounded-2xl p-3 cursor-pointer bd-card-1 ${value.isSelect?'bd-system':''}`" 
+                v-if="data_card.length>0" 
+                v-for="value in data_card">
                     <div class="flex gap-x-3">
                         <div class="flex flex-col gap-y-1">
                             <div class="text-[15px] color-4">{{ value.Name }}</div>
@@ -97,6 +100,7 @@ const system = useSystem();
 const tr  = ref<Record<string,string>>({});
 const isShowDrawer=ref<boolean>(false);
 const data_card=ref<ServiceType[]>([]);
+const selectedService=ref<ServiceType[]>([]);
 const isCreate=ref<boolean>(false);
 const isReset=ref<boolean>(false);
 const verify=ref<boolean>(false);
@@ -123,6 +127,7 @@ const onClickButtonDelete=()=>{
             console.log("cancel")
         },
         onSave:()=>{
+            data_card.value =  data_card.value.filter(s=>!selectedService.value.map(val=>val.EnglishName).includes(s.EnglishName)) 
             console.log("save")
         }
     })
@@ -130,6 +135,12 @@ const onClickButtonDelete=()=>{
 }
 const onClickButtonSave=()=>{
     verify.value = !verify.value;
+}
+const onSelectService=(data:ServiceType)=>{
+    data.isSelect = !data.isSelect;
+    if(data.isSelect) selectedService.value.push(data);
+    else selectedService.value=selectedService.value.filter(s=>s.EnglishName!=data.EnglishName)
+    console.log(selectedService.value)
 }
 const onSelectPage=(page:PageState)=>{
     data_card.value = car_fix.slice(page.page,page.rows)

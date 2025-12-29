@@ -84,7 +84,7 @@ const OnClickBtnLogin=()=>{
           ToastMessage({type:"error",detail: "Password and Confirm are differenc value!"})
           return;
         }
-        route.push('/')
+        route.push('/home')
         ToastMessage({type:"success",detail: "Login successfully!"})
         localStorage.setItem("isHasLogin","Yes")
     }else{

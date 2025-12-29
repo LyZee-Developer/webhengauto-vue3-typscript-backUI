@@ -14,7 +14,7 @@
                         </div>
                     </div>
                     <div class="w-full flex flex-col ">
-                        <RouterLink to="/">
+                        <RouterLink to="/home">
                             <div class="color-3 flex gap-x-3 w-full items-center hover-bg-card pl-3 py-3 cursor-pointer rounded-sm">
                                 <RiLayoutGridFill size="18px" class="w-4 h-4 text-gray-500 mr-2"/>
                                 <div v-if="isShowTitle" class="color-2">{{ system.language.home }}</div>
