@@ -6,4 +6,4 @@ if [[ -z $comment ]];then
 fi
 git add .
 git commit -m "$comment"
-git push master
+git push -u origin master
