@@ -3,7 +3,8 @@
         <div class="font-bold flex gap-x-3 items-center w-full justify-between">
             <div class="color-4 flex gap-x-3">
                 <RiToolsLine size="20px"/>
-                <h1>{{ tr.service }}</h1>
+                <h1>Service Type</h1>
+                <!-- <h1>{{ tr.service }}</h1> -->
             </div>
             <div><LSBtn :label="tr.create" type="add"  @click-on-button="onclickCreate" :isHasIcon="true"/></div>
         </div>
@@ -11,11 +12,20 @@
             <div class="flex justify-between flex-wrap items-center gap-y-2">
                 <div class="flex gap-x-3">
                     <div class="w-[45px] h-[45px] bg-card cursor-pointer rounded-lg flex justify-center items-center">
-                        <RiRefreshLine size="18px" class="color-3"/>
+                        <RiRefreshLine size="18px" class="color-3" @click="onClickButtonRefresh"/>
                     </div>
                     <div class="max-[430px]:w-[180px]"><LSInput :placeholder="tr.search_here" v-model="searchtxt"/></div>
                 </div>
-                <div><LSBtn :label="tr.delete" type="delete" class="disabled" :is-disabled="!data_card.some(s=>s.isSelect==true)" @click-on-button="onClickButtonDelete" :isHasIcon="true"/></div>
+                <div class="flex gap-x-3">
+                    <LSBtn label="update" type="update" class="disabled"
+                    @click-on-button="onClickButtonUpdate"
+                    :is-disabled="selectedService.length==0 || selectedService.length>1"
+                     :isHasIcon="true"/>
+                     <LSBtn :label="tr.delete" type="delete" class="disabled"
+                    @click-on-button="onClickButtonDelete"
+                    :is-disabled="selectedService.length==0"
+                     :isHasIcon="true"/>
+                </div>
             </div>
             <div class="grid pt-4 grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-4">
                 <div @click="()=>onSelectService(value)" 
@@ -24,8 +34,8 @@
                 v-for="value in data_card">
                     <div class="flex gap-x-3">
                         <div class="flex flex-col gap-y-1">
-                            <div class="text-[15px] color-4">{{ value.Name }}</div>
-                            <div class="text-[13px] color-2">{{ value.EnglishName }}</div>
+                            <div class="text-[15px] color-4">{{ value.name }}</div>
+                            <div class="text-[13px] color-2">{{ value.englishName }}</div>
                         </div>
                     </div>
                     <div class="w-full flex justify-end color-3 text-[12px]">
@@ -60,8 +70,8 @@
                  />
                 <div class="flex gap-x-6">
                     <div class="flex items-center gap-2">
-                    <RadioButton v-model="status" inputId="Active"  name="active" value="active" />
-                    <label for="Active" class="text-[13px] color-3">{{ tr.active }}</label>
+                    <RadioButton v-model="status" inputId="true"  name="active" value="active" />
+                    <label for="true" class="text-[13px] color-3">{{ tr.active }}</label>
                     </div>
                     <div class="flex items-center gap-2">
                         <RadioButton v-model="status" inputId="Disabled" name="disabled" value="disabled" />
@@ -93,9 +103,8 @@ import LSDrawer from '../../components/system/LSDrawer.vue';
 import { isEmptyData,  } from '../../utils/global_helper';
 import LSPagination from '../../components/system/LSPagination.vue';
 import { partner_data } from '../../data_fix/partner_fix';
-import { car_fix } from '../../data_fix/car_fix';
-import { service_data } from '../../data_fix/service_fix';
 import type { ServiceType } from '../../interface/service_type';
+import axios from 'axios'
 const system = useSystem();
 const tr  = ref<Record<string,string>>({});
 const isShowDrawer=ref<boolean>(false);
@@ -106,18 +115,34 @@ const isReset=ref<boolean>(false);
 const verify=ref<boolean>(false);
 const searchtxt=ref<string>("");
 const status=ref<string>("active");
+const selectedId=ref<number>(0);
 const data =ref({
     Name:"",
     EnglishName:"",
     IsDisabled:false,
 })
+const getListServiceType =async()=>{
+    try {
+        const api = "/api/service_type/list"; 
+        const response = await axios.post(api,
+        {
+        });
+        data_card.value = response.data;
+    } catch (err) {
+        console.log(err)
+    } 
+}
+const onClickButtonRefresh=()=>{
+    getListServiceType();
+}
 onMounted(()=>{
-    data_card.value = service_data.slice(0,10)
+    // data_card.value = service_data.slice(0,10)
+    getListServiceType();
 })
 watch(searchtxt,()=>{
     if(!isEmptyData(searchtxt.value)){
-        data_card.value = service_data.filter((val)=>val.Name.includes(searchtxt.value) || val.EnglishName.includes(searchtxt.value) );
-    }else data_card.value = service_data.splice(0,10);
+        data_card.value = data_card.value.filter((val)=>val.name.includes(searchtxt.value) || val.englishName.includes(searchtxt.value) );
+    }else getListServiceType();
 })
 const onClickButtonDelete=()=>{
     system.setConfirm({
@@ -127,23 +152,56 @@ const onClickButtonDelete=()=>{
             console.log("cancel")
         },
         onSave:()=>{
-            data_card.value =  data_card.value.filter(s=>!selectedService.value.map(val=>val.EnglishName).includes(s.EnglishName)) 
-            console.log("save")
+            var Ids = selectedService.value.map(val=>val.id);
+            Ids.map(async(val)=>{
+                const api = `/api/service_type/delete?id=${val}`; 
+                await axios.get(api);
+                getListServiceType();
+            })
         }
     })
     system.setIsShowConfirm(true)
 }
-const onClickButtonSave=()=>{
+const onClickButtonUpdate=()=>{
+    isCreate.value = false;
+    isShowDrawer.value =true;
+    if(selectedService.value.length>0){
+        data.value.EnglishName = selectedService.value[0]?.englishName || "";
+        data.value.Name = selectedService.value[0]?.name || "";
+        selectedId.value = selectedService.value[0]?.id || 0;
+        status.value = selectedService.value[0]?.status?"active":"disabled";
+    }
+    
+}
+const onClickButtonSave=async()=>{
     verify.value = !verify.value;
+    if(!isEmptyData(data.value.EnglishName) && !isEmptyData(data.value.Name)){
+        try {
+            const api = `/api/service_type/${isCreate.value?"create":"update"}`; 
+            await axios.post(api,
+            {
+                id:isCreate.value?0:selectedId.value,
+                englishName:data.value.EnglishName,
+                name:data.value.Name,
+                status:status.value=="active"
+            });
+            getListServiceType();
+            isShowDrawer.value = false;
+        } catch (err) {
+            console.log(err)
+        } 
+    }
+    console.log(data.value)
+    console.log(status.value)
 }
 const onSelectService=(data:ServiceType)=>{
     data.isSelect = !data.isSelect;
     if(data.isSelect) selectedService.value.push(data);
-    else selectedService.value=selectedService.value.filter(s=>s.EnglishName!=data.EnglishName)
+    else selectedService.value=selectedService.value.filter(s=>s.englishName!=data.englishName)
     console.log(selectedService.value)
 }
 const onSelectPage=(page:PageState)=>{
-    data_card.value = car_fix.slice(page.page,page.rows)
+    data_card.value = data_card.value.slice(page.page,page.rows)
 }
 const onClickButtonReset=()=>{
     isReset.value = !isReset.value;
@@ -152,6 +210,9 @@ const onClickButtonReset=()=>{
 const onclickCreate=()=>{
     isCreate.value = true;
     isShowDrawer.value = true;
+    data.value.EnglishName = ""
+    data.value.Name = ""
+    status.value = "active"
 }
 watch(system,()=>{
     tr.value = system.language;

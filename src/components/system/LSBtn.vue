@@ -12,13 +12,14 @@
                         <RiRefreshLine size="15px" v-else-if="type.toLowerCase()=='reset'"/>
                         <RiAddLine size="20px"  v-else-if="type.toLowerCase()=='add'"/>
                         <RiDeleteBinLine size="20px"  v-else-if="type.toLowerCase()=='delete'"/>
+                        <RiPencilFill size="20px"  v-else-if="type.toLowerCase()=='update' || type.toLowerCase()=='edit'"/>
                     </template>
                 </Button>
             </div>
 </template>
 
 <script lang="ts" setup>
-    import { RiAddLine, RiCloseLine, RiDeleteBinLine, RiRefreshLine, RiSaveLine } from '@remixicon/vue'
+    import { RiAddLine, RiCloseLine, RiDeleteBinLine, RiPencilFill, RiRefreshLine, RiSaveLine } from '@remixicon/vue'
 import { Button } from 'primevue'
 import { computed } from 'vue'
     const prop = defineProps(["label","color","isDisabled","class","type","color","isLoading","isHasIcon"])
@@ -32,8 +33,8 @@ import { computed } from 'vue'
     const color = computed(()=>{
         var cl = "secondary";
         if(prop.type=="cancel") cl ="secondary";
-        if(prop.type=="save" || prop.type=='add') cl ="success";
-        if(prop.type=="info") cl ="info";
+        if(prop.type=="save" || prop.type=='add' ) cl ="success";
+        if(prop.type=="info" || prop.type=="update") cl ="info";
         if(prop.type=="danger" || prop.type=="delete") cl ="danger";
         if(prop.type=="warn" || prop.type=="reset" ) cl ="warn";
         if(prop.type=="contrast") cl ="contrast";
