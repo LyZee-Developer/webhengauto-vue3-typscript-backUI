@@ -38,29 +38,29 @@ jobs:
               if: always()
               run: |
                 docker logout
-    deploy-gcp:
-      needs: build-push
-      runs-on: ubuntu-latest
-      environment: GOOGLE_ENV
-      steps:
-          - name: Clone code
-            uses: actions/checkout@v3
-          - name: Use with SHA
-            run: |
-                echo "TAG=${GITHUB_SHA::8}" >> $GITHUB_ENV
-          - name: Show Tag
-            run: |
-                echo "TAG is ${{ env.TAG }} "   
-          - name: Deploy by ssh
-            uses: appleboy/ssh-action@v1.0.0
-            with:
-              host: ${{ secrets.IP }}
-              username: ${{ secrets.USER }}
-              key: ${{ secrets.PK }}
-              envs: TAG
-              script: |
-                docker stop heng-service-app || true
-                docker rm heng-service-app || true
-                docker run -dp 8080:80 \
-                --name heng-service-app \
-                "lsdockers/${{env.IMAGE_NAME}}:${{env.TAG}}"
+    # deploy-gcp:
+    #   needs: build-push
+    #   runs-on: ubuntu-latest
+    #   environment: GOOGLE_ENV
+    #   steps:
+    #       - name: Clone code
+    #         uses: actions/checkout@v3
+    #       - name: Use with SHA
+    #         run: |
+    #             echo "TAG=${GITHUB_SHA::8}" >> $GITHUB_ENV
+    #       - name: Show Tag
+    #         run: |
+    #             echo "TAG is ${{ env.TAG }} "   
+    #       - name: Deploy by ssh
+    #         uses: appleboy/ssh-action@v1.0.0
+    #         with:
+    #           host: ${{ secrets.IP }}
+    #           username: ${{ secrets.USER }}
+    #           key: ${{ secrets.PK }}
+    #           envs: TAG
+    #           script: |
+    #             docker stop heng-service-app || true
+    #             docker rm heng-service-app || true
+    #             docker run -dp 8080:80 \
+    #             --name heng-service-app \
+    #             "lsdockers/${{env.IMAGE_NAME}}:${{env.TAG}}"
