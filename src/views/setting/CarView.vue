@@ -3,7 +3,7 @@
         <div class="font-bold flex gap-x-3 items-center w-full justify-between">
             <div class="color-4 flex gap-x-3">
                 <RiCarLine size="20px"/>
-                <h1>{{ tr.car }}</h1>
+                <h1>{{ tr.car }} server</h1>
             </div>
             <div><LSBtn :label="tr.create" type="add"  @click-on-button="onclickCreate" :isHasIcon="true"/></div>
         </div>
