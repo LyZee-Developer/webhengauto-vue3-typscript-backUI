@@ -3,7 +3,7 @@
         <div class="font-bold flex gap-x-3 items-center w-full justify-between">
             <div class="color-4 flex gap-x-3">
                 <RiToolsLine size="20px"/>
-                <h1>Service Type server</h1>
+                <h1>Service Type server1333</h1>
                 <!-- <h1>{{ tr.service }}</h1> -->
             </div>
             <div><LSBtn :label="tr.create" type="add"  @click-on-button="onclickCreate" :isHasIcon="true"/></div>
