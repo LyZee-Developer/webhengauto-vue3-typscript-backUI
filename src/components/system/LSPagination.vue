@@ -1,5 +1,8 @@
 <template>
-    <Paginator :rows="rows" :totalRecords="totalRecords" @update:first="onFirstChange" :class="prop.class" @page="onSelectPage" :rowsPerPageOptions="[10, 20,50,100]"></Paginator>
+    <div class="flex  justify-between items-center">
+        <div class="color-3">Total Record: <span>{{ totalRecords }}</span></div>
+        <Paginator :rows="rows" :totalRecords="totalRecords" @update:first="onFirstChange" :class="prop.class" @page="onSelectPage" :rowsPerPageOptions="[10, 20,50,100]"></Paginator>
+    </div>
 </template>
 
 <script setup lang="ts">

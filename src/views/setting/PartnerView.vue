@@ -7,36 +7,41 @@
             </div>
             <div><LSBtn :label="tr.create" type="add"  @click-on-button="onclickCreate" :isHasIcon="true"/></div>
         </div>
-        <div class="w-full h-full">
-            <div class="flex justify-between flex-wrap items-center gap-y-2">
-                <div class="flex gap-x-3">
-                    <div class="w-[45px] h-[45px] bg-card cursor-pointer rounded-lg flex justify-center items-center">
-                        <RiRefreshLine size="18px" class="color-3"/>
-                    </div>
-                    <div class="max-[430px]:w-[180px]"><LSInput placeholder="Search here..." v-model="searchtxt"  /></div>
-                </div>
-                <div><LSBtn :label="tr.delete" type="delete" class="disabled" :is-disabled="!data_card.some(s=>s.isSelect==true)" @click-on-button="onClickButtonDelete" :isHasIcon="true"/></div>
-            </div>
-            <div class="grid pt-4 grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-4">
-                <div v-if="data_card.length>0" @click="()=>onSelectService(value)" :class="`w-full cursor-pointer  rounded-2xl p-3 bd-card-1 ${value.isSelect?'bd-system':''}`" v-for="value in data_card">
-                    <div class="flex gap-x-3">
-                        <div @click="()=>{onClickImage(value)}" class="p-[4px] rounded-full bd-card w-[45px] h-[45px]">
-                            <img  :src="value.PathURL" class="w-full h-full rounded-full object-cover" alt="">
+        <div>
+
+            <div class="grid h-full grid-rows-[1fr_120px]">
+                <div class="w-full h-full">
+                    <div class="flex justify-between flex-wrap items-center gap-y-2">
+                        <div class="flex gap-x-3">
+                            <div class="w-[45px] h-[45px] bg-card cursor-pointer rounded-lg flex justify-center items-center">
+                                <RiRefreshLine size="18px" class="color-3"/>
+                            </div>
+                            <div class="max-[430px]:w-[180px]"><LSInput placeholder="Search here..." v-model="searchtxt"  /></div>
                         </div>
-                        <div class="flex flex-col gap-y-1">
-                            <div class="text-[15px] color-4">{{ value.Name }}</div>
-                            <div class="text-[13px] color-2">{{ value.EnglishName }}</div>
+                        <div><LSBtn :label="tr.delete" type="delete" class="disabled" :is-disabled="!data_card.some(s=>s.isSelect==true)" @click-on-button="onClickButtonDelete" :isHasIcon="true"/></div>
+                    </div>
+                    <div class="grid pt-4 grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-4">
+                        <div v-if="data_card.length>0" @click="()=>onSelectService(value)" :class="`w-full cursor-pointer  rounded-2xl p-3 bd-card-1 ${value.isSelect?'bd-system':''}`" v-for="value in data_card">
+                            <div class="flex gap-x-3">
+                                <div @click="()=>{onClickImage(value)}" class="p-[4px] rounded-full bd-card w-[45px] h-[45px]">
+                                    <img  :src="value.PathURL" class="w-full h-full rounded-full object-cover" alt="">
+                                </div>
+                                <div class="flex flex-col gap-y-1">
+                                    <div class="text-[15px] color-4">{{ value.Name }}</div>
+                                    <div class="text-[13px] color-2">{{ value.EnglishName }}</div>
+                                </div>
+                            </div>
+                            <div class="w-full flex justify-end color-3 text-[12px]">
+                                    <span>@lyzee</span><span>{{ moment().format('LL') }}</span>
+                            </div>
+                        </div>
+                        <div v-else class="w-full rounded-lg color-2 p-3 h-[100px] flex justify-center items-center bg-card">
+                            {{ tr.no_data_available }}
                         </div>
                     </div>
-                    <div class="w-full flex justify-end color-3 text-[12px]">
-                            <span>@lyzee</span><span>{{ moment().format('LL') }}</span>
-                    </div>
                 </div>
-                <div v-else class="w-full rounded-lg color-2 p-3 h-[100px] flex justify-center items-center bg-card">
-                    {{ tr.no_data_available }}
-                </div>
+                <LSPagination :row-btn="5" :total-record="partner_data.length" class="mt-4 flex justify-end max-[430px]:justify-center" @onSelectPage="onSelectPage"/>
             </div>
-            <LSPagination :row-btn="5" :total-record="partner_data.length" class="mt-4 flex justify-end max-[430px]:justify-center" @onSelectPage="onSelectPage"/>
         </div>
         <LSDrawer v-model="isShowDrawer">
             <template #header>
