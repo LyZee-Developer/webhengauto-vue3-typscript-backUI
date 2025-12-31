@@ -30,7 +30,7 @@
             <div class="grid pt-4 grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-4">
                 <div @click="()=>onSelectService(value)" 
                 :class="`w-full rounded-2xl p-3 cursor-pointer bd-card-1 ${value.isSelect?'bd-system':''}`" 
-                v-if="data_card.length>0" 
+                v-if="data_card.length>0 && !isLoading" 
                 v-for="value in data_card">
                     <div class="flex gap-x-3">
                         <div class="flex flex-col gap-y-1">
@@ -39,7 +39,21 @@
                         </div>
                     </div>
                     <div class="w-full flex justify-end color-3 text-[12px]">
-                            <span>@lyzee</span><span>{{ moment().format('LL') }}</span>
+                            <span>@{{ value.createdBy }}</span><span>{{ moment(value.createdDate).format('LL') }}</span>
+                    </div>
+                </div>
+                <div @click="()=>onSelectService(value)" 
+                :class="`w-full rounded-2xl p-3 cursor-pointer bd-card-1 ${value.isSelect?'bd-system':''}`" 
+                v-else-if="isLoading" 
+                v-for="value in data_card">
+                    <div class="flex gap-x-3">
+                        <div class="flex flex-col gap-y-1">
+                            <div class="text-[15px] color-4 w-[40px] h-[15px] rounded-md bg-card animate-pulse"></div>
+                            <div class="text-[15px] color-4 w-[48px] h-[15px] rounded-md bg-card animate-pulse"></div>
+                        </div>
+                    </div>
+                    <div class="w-full flex justify-end color-3 text-[12px]">
+                        <div class="text-[15px] color-4 w-[48px] h-[15px] rounded-md bg-card animate-pulse"></div>
                     </div>
                 </div>
                 <div v-else class="w-full rounded-lg color-2 p-3 h-[100px] flex justify-center items-center bg-card">
@@ -108,6 +122,7 @@ import axios from 'axios'
 const system = useSystem();
 const tr  = ref<Record<string,string>>({});
 const isShowDrawer=ref<boolean>(false);
+const isLoading=ref<boolean>(false);
 const data_card=ref<ServiceType[]>([]);
 const selectedService=ref<ServiceType[]>([]);
 const isCreate=ref<boolean>(false);
@@ -122,17 +137,20 @@ const data =ref({
     IsDisabled:false,
 })
 const getListServiceType =async()=>{
+    isLoading.value = true;
     try {
         const api = "/api/service_type/list"; 
         const response = await axios.post(api,
         {
         });
+        isLoading.value = false;
         data_card.value = response.data;
     } catch (err) {
         console.log(err)
     } 
 }
 const onClickButtonRefresh=()=>{
+    isLoading.value = true;
     getListServiceType();
 }
 onMounted(()=>{
@@ -141,7 +159,7 @@ onMounted(()=>{
 })
 watch(searchtxt,()=>{
     if(!isEmptyData(searchtxt.value)){
-        data_card.value = data_card.value.filter((val)=>val.name.includes(searchtxt.value) || val.englishName.includes(searchtxt.value) );
+        data_card.value = data_card.value.filter((val)=>val.name.includes(searchtxt.value) || val.englishName.toLowerCase().includes(searchtxt.value) );
     }else getListServiceType();
 })
 const onClickButtonDelete=()=>{
@@ -157,6 +175,7 @@ const onClickButtonDelete=()=>{
                 const api = `/api/service_type/delete?id=${val}`; 
                 await axios.get(api);
                 getListServiceType();
+                selectedService.value = []
             })
         }
     })

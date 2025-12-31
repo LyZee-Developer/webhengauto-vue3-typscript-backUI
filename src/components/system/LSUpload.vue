@@ -35,6 +35,7 @@ const isMulti = computed(()=>prop.isMulti || false)
 const ref_file=ref<HTMLInputElement | null>();
 const files = ref< File[] | FileList>();
 const previewImage = ref<string>("");
+const base64Image = ref<string>("");
 const system = useSystem();
 const onSelectFileUpload=()=>{
     ref_file.value?.click();
@@ -52,7 +53,42 @@ const changeFile=(e:Event)=>{
     const blob = target.files[0] as Blob;
     const objectURL = URL.createObjectURL(blob);
     previewImage.value = objectURL;
+    convertToBase64(blob);
 }
+// const handleFileUpload = (blob) => {
+//   const file = event.target.files[0];
+//   if (file && file.type.startsWith('image/')) {
+//     convertToBase64(file);
+//   } else {
+//     alert('Please select a valid image file.');
+//     base64Image.value = '';
+//   }
+// };
+
+const convertToBase64 = (file:Blob) => {
+if (file && file.type.startsWith('image/')) {
+    const reader = new FileReader();
+        // This event handler is called when the read operation is successfully completed
+        reader.onload = (e) => {
+            // The result attribute contains the data as a data: URL (base64 encoded string)
+            base64Image.value = e.target?.result as string;
+            emit("onChangeFile",{
+                base64:base64Image.value,
+                file:file
+            })
+        };
+        // This event handler is called if an error occurs
+        reader.onerror = (error) => {
+            console.error("FileReader error: ", error);
+        };
+        // Read the file content as a Data URL (which is a Base64 string)
+        reader.readAsDataURL(file);
+  } else {
+    alert('Please select a valid image file.');
+    base64Image.value = '';
+  }
+  
+};
 const removeImage=()=>{
     if (ref_file.value) {
         ref_file.value.value = '';

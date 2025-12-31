@@ -11,8 +11,8 @@ export default defineConfig({
     port: 3030, // Set your desired port here
     proxy:{
       '/api': {
-        target: 'http://34.142.158.113:8093', //server
-        // target: 'http://localhost:4433/', //local
+        // target: 'http://34.142.158.113:8093', //server
+        target: 'http://localhost:4433/', //local
         changeOrigin: true,
       }
     }
