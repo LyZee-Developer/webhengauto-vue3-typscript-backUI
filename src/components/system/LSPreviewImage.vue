@@ -2,7 +2,7 @@
     <Dialog v-model:visible="system.IsShowImage" :dismissableMask="true" :showHeader="false"  v-if="!isEmptyData(system.PathImage)" :closable="true" modal
      class="!max-w-[800px] !bg-[#12312300] !border-none relative"
     >
-        <img :src="image" class="w-full h-full select-none object-contain"/>
+        <img :src="image" class="max-w-[600px] max-h-[700px] w-full h-full select-none object-contain"/>
     </Dialog>
 </template>
 

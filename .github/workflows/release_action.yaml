@@ -1,7 +1,7 @@
 on:
     push:
         branches:
-            - master
+            - master1
 env:
     IMAGE_NAME: auto-vue
 jobs:
@@ -26,11 +26,6 @@ jobs:
             - name: Push DockerHub
               run: |
                 docker push ${{ secrets.USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.TAG }}
-            - name: Run Docker container
-              run: |
-                docker stop web-back-ui-cont || true
-                docker rm web-back-ui-cont || true
-                docker run -d -p 3333:80 --name web-back-ui-cont ${{ secrets.USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.TAG }}
             - name: Check Container
               run: |
                 docker ps
@@ -59,8 +54,8 @@ jobs:
               key: ${{ secrets.PK }}
               envs: TAG
               script: |
-                docker stop heng-service-app || true
-                docker rm heng-service-app || true
-                docker run -dp 8080:80 \
-                --name heng-service-app \
+                docker stop hgsvc-vue-container || true
+                docker rm hgsvc-vue-container || true
+                docker run -dp 8002:80 \
+                --name hgsvc-vue-container \
                 "lsdockers/${{env.IMAGE_NAME}}:${{env.TAG}}"

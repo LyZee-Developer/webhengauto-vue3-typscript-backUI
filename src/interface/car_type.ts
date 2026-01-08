@@ -1,5 +1,5 @@
-export interface PartnerType{
-     createdBy: string,
+export interface CarType{
+    createdBy: string,
     createdDate: string,
     database: string,
     englishName: string,

@@ -7,36 +7,66 @@
             </div>
             <div><LSBtn :label="tr.create" type="add"  @click-on-button="onclickCreate" :isHasIcon="true"/></div>
         </div>
-        <div class="w-full h-full">
-            <div class="flex justify-between flex-wrap items-center gap-y-2">
-                <div class="flex gap-x-3">
-                    <div class="w-[45px] h-[45px] bg-card cursor-pointer rounded-lg flex justify-center items-center">
-                        <RiRefreshLine size="18px" class="color-3"/>
-                    </div>
-                    <div class="max-[430px]:w-[180px]"><LSInput :placeholder="tr.search_here" v-model="searchtxt"/></div>
-                </div>
-                <div><LSBtn :label="tr.delete" type="delete" class="disabled" :is-disabled="!data_card.some(s=>s.isSelect==true)" @click-on-button="onClickButtonDelete" :isHasIcon="true"/></div>
-            </div>
-            <div class="grid pt-4 grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-4">
-                <div @click="()=>onSelectService(value)" :class="`w-full rounded-2xl p-3 cursor-pointer bd-card-1 ${value.isSelect?'bd-system':''}`" v-if="data_card.length>0" v-for="value in data_card">
+        <div class="grid grid-rows-[1fr_130px]">
+           <div class="w-full h-full">
+                <div class="flex justify-between flex-wrap items-center gap-y-2">
                     <div class="flex gap-x-3">
-                        <div @click="()=>{onClickImage(value)}" class="p-[4px] rounded-full bd-card w-[45px] h-[45px]">
-                            <img  :src="value.PathURL" class="w-full h-full rounded-full object-cover" alt="">
+                        <div class="w-[45px] h-[45px] bg-card cursor-pointer rounded-lg flex justify-center items-center">
+                            <RiRefreshLine size="18px" class="color-3" @click="onClickButtonRefresh"/>
                         </div>
-                        <div class="flex flex-col gap-y-1">
-                            <div class="text-[15px] color-4">{{ value.Name }}</div>
-                            <div class="text-[13px] color-2">{{ value.EnglishName }}</div>
-                        </div>
+                        <div class="max-[430px]:w-[180px]"><LSInput :placeholder="tr.search_here" v-model="searchtxt"/></div>
                     </div>
-                    <div class="w-full flex justify-end color-3 text-[12px]">
-                            <span>@lyzee</span><span>{{ moment().format('LL') }}</span>
+                    <div class="flex gap-x-3">
+                        <LSBtn label="update" type="update" class="disabled"
+                        @click-on-button="onClickButtonUpdate"
+                        :is-disabled="selectedCard.length==0 || selectedCard.length>1"
+                        :isHasIcon="true"/>
+                        <LSBtn :label="tr.delete" 
+                        type="delete" class="disabled"
+                        :is-disabled="selectedCard.length==0"
+                        @click-on-button="onClickButtonDelete" 
+                        :isHasIcon="true"/>
                     </div>
                 </div>
-                <div v-else class="w-full rounded-lg color-2 p-3 h-[100px] flex justify-center items-center bg-card">
-                    {{ tr.no_data_available }}
+                <div class="grid pt-4 grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-4">
+                    <div @click="()=>onSelectService(value)" :class="`w-full rounded-2xl p-3 cursor-pointer bd-card-1 ${selectedCard.some(v=>v.id==value.id)?'bd-system':''}`"
+                        v-if="data_card.length>0 && !isLoading" 
+                        v-for="value in data_card">
+                        <div class="flex gap-x-3">
+                            <div @click="()=>{onClickImage(value)}" class="p-[4px] rounded-full bd-card w-[45px] h-[45px]">
+                                <img  :src="`http://localhost:4433/${value.pathImage}`" @error="onErrorImage" class="w-full h-full rounded-full object-cover" alt="">
+                            </div>
+                            <div class="flex flex-col gap-y-1">
+                                <div class="text-[15px] color-4">{{ value.name }}</div>
+                                <div class="text-[13px] color-2">{{ value.englishName }}</div>
+                            </div>
+                        </div>
+                        <div class="w-full flex justify-end color-3 text-[12px]">
+                                <span>@{{ value.createdBy }}</span><span>{{ moment(value.createdDate).format('LL') }}</span>
+                        </div>
+                    </div>
+                    <div 
+                        :class="`w-full rounded-2xl p-3 cursor-pointer bd-card-1 `"
+                        v-else-if="isLoading" v-for="value in [1,2,3,4,5,6]">
+                        <div class="flex gap-x-3 " :key="value">
+                            <div class="p-[4px] rounded-full bd-card w-[45px] h-[45px]">
+                                <div class="text-[15px] color-4 w-full h-full rounded-md bg-card animate-pulse"></div>
+                            </div>
+                            <div class="flex flex-col gap-y-1">
+                                <div class="text-[15px] color-4 w-[40px] h-[15px] rounded-md bg-card animate-pulse"></div>
+                                <div class="text-[15px] color-4 w-[40px] h-[15px] rounded-md bg-card animate-pulse"></div>
+                            </div>
+                        </div>
+                        <div class="w-full flex justify-end color-3 text-[12px]">
+                                <div class="text-[15px] color-4 w-[40px] h-[15px] rounded-md bg-card animate-pulse"></div>
+                        </div>
+                    </div>
+                    <div v-else class="w-full rounded-lg color-2 p-3 h-[100px] flex justify-center items-center bg-card">
+                        {{ tr.no_data_available }}
+                    </div>
                 </div>
-            </div>
-            <LSPagination :row-btn="5" :total-record="partner_data.length" class="mt-4 flex justify-end max-[430px]:justify-center" @onSelectPage="onSelectPage"/>
+           </div>
+            <LSPagination :row-btn="5" :total-record="totalRecord" class="mt-4 flex justify-end max-[430px]:justify-center" @onSelectPage="onSelectPage"/>
         </div>
         <LSDrawer v-model="isShowDrawer">
             <template #header>
@@ -68,13 +98,13 @@
                         <label for="Disabled" class="text-[13px] color-3">{{ tr.disabled }}</label>
                     </div>
                 </div>
-                <LSUpload />
+                <LSUpload @onChangeFile="onChangeFile" v-model="drawerData" v-model:is-drawer-data="isDrawerData" ref="ref_upload"/>
             </div>
             <template #footer>
                 <div class="flex gap-x-3 justify-end">
                     <LSBtn :is-has-icon="true" label="Cancel" type="cancel" @click-on-button="isShowDrawer=false"/>
                     <LSBtn :is-has-icon="true" label="reset" type="reset" @click-on-button="onClickButtonReset"/>
-                    <LSBtn :is-has-icon="true" label="save" type="save" @click-on-button="onClickButtonSave"/>
+                    <LSBtn :is-has-icon="true" label="save" :isLoading="isLoadingSave" type="save" @click-on-button="onClickButtonSave"/>
                 </div>
             </template>
         </LSDrawer>
@@ -91,25 +121,40 @@ import LSBtn from '../../components/system/LSBtn.vue';
 import moment from 'moment';
 
 import LSDrawer from '../../components/system/LSDrawer.vue';
-import { isEmptyData } from '../../utils/global_helper';
+import { isEmptyData, onErrorImage } from '../../utils/global_helper';
 import LSPagination from '../../components/system/LSPagination.vue';
-import { partner_data } from '../../data_fix/partner_fix';
-import type { PartnerType } from '../../interface/partner_type';
-import { car_fix } from '../../data_fix/car_fix';
-import LSUpload from '../../components/system/LSUpload.vue';
+import LSUpload, { type ChildPublicAPI } from '../../components/system/LSUpload.vue';
+import axios from 'axios';
+import type { CarType } from '../../interface/car_type';
+
 const system = useSystem();
 const tr  = ref<Record<string,string>>({});
 const isShowDrawer=ref<boolean>(false);
-const data_card=ref<PartnerType[]>([]);
-const selectedCard=ref<PartnerType[]>([]);
+const isLoadingSave=ref<boolean>(false);
+const isDrawerData=ref<boolean>();
+const data_card=ref<CarType[]>([]);
+const selectedCard=ref<CarType[]>([]);
+const drawerData=ref<CarType | {}>();
 const isCreate=ref<boolean>(false);
+const selectedId=ref<number>(0);
+const totalRecord=ref<number>(0);
+const fileSource=ref<any>(0);
+const ref_upload=ref<ChildPublicAPI  | null>(null);
 const isReset=ref<boolean>(false);
+const isLoading=ref<boolean>(false);
+const onClickButtonRefresh=()=>{
+    isLoading.value = true;
+    selectedCard.value = [];
+    getListCar();
+}
 
 const verify=ref<boolean>(false);
 const searchtxt=ref<string>("");
-const onClickImage=(value:PartnerType)=>{
-    system.setPathImage(value.PathURL)
-    system.setIsShowImage(true)
+const onClickImage=(value:CarType)=>{
+    if(!isEmptyData(value.pathImage)){
+        system.setPathImage(`http://localhost:4433/${value.pathImage}`)
+        system.setIsShowImage(true)
+    }
 }
 
 const status=ref<string>("active");
@@ -118,20 +163,52 @@ const data =ref({
     EnglishName:"",
     IsDisabled:false,
 })
+const getListCar =async()=>{
+    isLoading.value = true;
+    try {
+        const api = "/api/car/list"; 
+        const response = await axios.post(api,
+        {
+        });
+        isLoading.value = false;
+        
+        data_card.value = response.data;
+        totalRecord.value = data_card.value[0]?.recordCount || 0;
+    } catch (err) {
+        console.log(err)
+    } 
+}
 onMounted(()=>{
-    data_card.value = car_fix.slice(0,10)
+    getListCar();
 })
-const onSelectService=(data:PartnerType)=>{
-    data.isSelect = !data.isSelect;
-    if(data.isSelect) selectedCard.value.push(data);
-    else selectedCard.value=selectedCard.value.filter(s=>s.EnglishName!=data.EnglishName)
+const onSelectService=(data:CarType)=>{
+    if(!selectedCard.value.some(s=>s.id==data.id)) selectedCard.value.push(data);
+    else selectedCard.value=selectedCard.value.filter(s=>s.id!=data.id)
     console.log(selectedCard.value)
 }
 watch(searchtxt,()=>{
     if(!isEmptyData(searchtxt.value)){
-        data_card.value = car_fix.filter((val)=>val.Name.includes(searchtxt.value) || val.EnglishName.includes(searchtxt.value) );
-    }else data_card.value = car_fix.splice(0,10);
+        data_card.value = data_card.value.filter((val)=>val.name.includes(searchtxt.value) || val.englishName.toLowerCase().includes(searchtxt.value) );
+    }else getListCar();
 })
+const onChangeFile=(file:any)=>{
+    console.log(file)
+    fileSource.value  = file;
+}
+const onClickButtonUpdate=()=>{
+    isCreate.value = false;
+    isDrawerData.value = true;
+    isShowDrawer.value =true;
+    if(selectedCard.value.length>0){
+        drawerData.value = selectedCard.value.length==1 ? selectedCard.value[0]:[];
+        data.value.EnglishName = selectedCard.value[0]?.englishName || "";
+        data.value.Name = selectedCard.value[0]?.name || "";
+        selectedId.value = selectedCard.value[0]?.id || 0;
+        status.value = selectedCard.value[0]?.status?"active":"disabled";
+    }
+     
+    
+}
 const onClickButtonDelete=()=>{
     system.setConfirm({
         message:"Do you want to delete car?",
@@ -140,23 +217,75 @@ const onClickButtonDelete=()=>{
             console.log("cancel")
         },
         onSave:()=>{
-            data_card.value =  data_card.value.filter(s=>!selectedCard.value.map(val=>val.EnglishName).includes(s.EnglishName)) 
+            var Ids = selectedCard.value.map(val=>val.id);
+            Ids.map(async(val)=>{
+                const api = `/api/car/delete?id=${val}`; 
+                await axios.get(api);
+                getListCar();
+                selectedCard.value = []
+            })
         }
     })
     system.setIsShowConfirm(true)
 }
-const onClickButtonSave=()=>{
+
+
+const onClickButtonSave= async()=>{
     verify.value = !verify.value;
+    console.log("fileSource.value",fileSource.value)
+    if(!isEmptyData(data.value.EnglishName) && !isEmptyData(data.value.Name)){
+        isLoadingSave.value = true;
+        try {
+            const api = `/api/car/${isCreate.value?"create":"update"}`; 
+            var send = {
+                id:isCreate.value?0:selectedId.value,
+                englishName:data.value.EnglishName,
+                name:data.value.Name,
+                status:status.value=="active",
+                upload :{}
+            }
+            if(!isEmptyData(fileSource.value)){
+                send.upload = {
+                    type:fileSource.value.file.type,
+                    typeImage:"png",
+                    size:fileSource.value.file.size,
+                    name:fileSource.value.file.name,
+                    base64Text:fileSource.value.base64
+                }
+            }
+            await axios.post(api,send);
+            isLoadingSave.value = false;
+            getListCar();
+            isShowDrawer.value = false;
+        } catch (err) {
+            console.log(err)
+        } 
+    }
+
 }
+
 const onSelectPage=(page:PageState)=>{
-    data_card.value = car_fix.slice(page.page,page.rows)
+    data_card.value = data_card.value.slice(page.page,page.rows)
 }
 const onClickButtonReset=()=>{
     isReset.value = !isReset.value;
+    setEmptyValue();
+    if(ref_upload.value) {
+        ref_upload.value.clearFile();
+    }
 }
 const onclickCreate=()=>{
+    setEmptyValue();
     isCreate.value = true;
     isShowDrawer.value = true;
+    selectedCard.value = []
+}
+const setEmptyValue=()=>{
+    data.value.EnglishName = "";
+    data.value.Name = "";
+    status.value = "active";
+    fileSource.value  = {};
+    drawerData.value  = {};
 }
 watch(system,()=>{
     tr.value = system.language;

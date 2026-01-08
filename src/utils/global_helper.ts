@@ -1,6 +1,7 @@
 import type { ToastType } from "../interface/toast_type";
 import { useSystem } from "../store/system";
-
+import noimage from '../assets/system/no-image.jpg'
+import {GlobalText} from './data_global/global'
 const translate=(kh:string,en:string)=>{
     var lang = localStorage.getItem("lang");
     var value = kh;
@@ -22,5 +23,9 @@ const ToastMessage=(message:ToastType)=>{
     system.setIsShowToast(true) 
 }
 
+const onErrorImage=(e:any)=>{
+    e.target.src  = noimage;
+}
 
-export {translate,isEmptyData,ToastMessage};
+
+export {translate,isEmptyData,ToastMessage,onErrorImage ,GlobalText};
