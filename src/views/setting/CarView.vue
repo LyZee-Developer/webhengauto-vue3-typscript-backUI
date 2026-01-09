@@ -17,32 +17,41 @@
                         <div class="max-[430px]:w-[180px]"><LSInput :placeholder="tr.search_here" v-model="searchtxt"/></div>
                     </div>
                     <div class="flex gap-x-3">
-                        <LSBtn label="update" type="update" class="disabled"
+                        <!-- <LSBtn label="update" type="update" class="disabled"
                         @click-on-button="onClickButtonUpdate"
                         :is-disabled="selectedCard.length==0 || selectedCard.length>1"
                         :isHasIcon="true"/>
-                        <LSBtn :label="tr.delete" 
+                        <LSBtn :label="tr.delete"
                         type="delete" class="disabled"
                         :is-disabled="selectedCard.length==0"
-                        @click-on-button="onClickButtonDelete" 
-                        :isHasIcon="true"/>
+                        @click-on-button="onClickButtonDelete"
+                        :isHasIcon="true"/> -->
                     </div>
                 </div>
-                <div class="grid pt-4 grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-4">
-                    <div @click="()=>onSelectService(value)" :class="`w-full rounded-2xl p-3 cursor-pointer bd-card-1 ${selectedCard.some(v=>v.id==value.id)?'bd-system':''}`"
+                 <Menu ref="menu" id="overlay_menu" :model="items" :popup="true" ></Menu>
+                <div class="grid pt-4  grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-4">
+                    <div @click="()=>onSelectService(value)" :class="`w-full relative rounded-2xl p-3 cursor-pointer bd-card-1 `"
                         v-if="data_card.length>0 && !isLoading" 
                         v-for="value in data_card">
+                        <div class="absolute right-3 top-2 flex justify-center items-center h-[20px] w-[20px] " @click="toggle">
+                                <RiMoreFill size="18px" class="color-3" aria-haspopup="true" />
+                        </div>
                         <div class="flex gap-x-3">
                             <div @click="()=>{onClickImage(value)}" class="p-[4px] rounded-full bd-card w-[45px] h-[45px]">
                                 <img  :src="`http://localhost:4433/${value.pathImage}`" @error="onErrorImage" class="w-full h-full rounded-full object-cover" alt="">
                             </div>
                             <div class="flex flex-col gap-y-1">
-                                <div class="text-[15px] color-4">{{ value.name }}</div>
+                                    <div class="flex gap-x-2 items-center">
+                                    <div class="text-[15px] color-4">{{ value.name }}</div>
+                                    <div v-if="value.status" class="w-[8px] h-[8px] rounded-full bg-green-400"></div>
+                                    <div v-else class="w-[8px] h-[8px] rounded-full bg-red-400"></div>
+                                </div>
                                 <div class="text-[13px] color-2">{{ value.englishName }}</div>
                             </div>
+                                
                         </div>
                         <div class="w-full flex justify-end color-3 text-[12px]">
-                                <span>@{{ value.createdBy }}</span><span>{{ moment(value.createdDate).format('LL') }}</span>
+                                <span>@lyzee</span><span>{{ moment().format('LL') }}</span>
                         </div>
                     </div>
                     <div 
@@ -61,7 +70,7 @@
                                 <div class="text-[15px] color-4 w-[40px] h-[15px] rounded-md bg-card animate-pulse"></div>
                         </div>
                     </div>
-                    <div v-else class="w-full rounded-lg color-2 p-3 h-[100px] flex justify-center items-center bg-card">
+                    <div v-else class="w-full rounded-lg text-[13px]  color-2 p-3 h-[100px] flex justify-center items-center bg-card">
                         {{ tr.no_data_available }}
                     </div>
                 </div>
@@ -70,7 +79,7 @@
         </div>
         <LSDrawer v-model="isShowDrawer">
             <template #header>
-                {{ tr.create }}
+                {{ isCreate? tr.create:"Update" }}
             </template>
             <div class="mt-3 flex flex-col gap-y-6">
                 <LSInput
@@ -112,23 +121,26 @@
 </template>
 
 <script setup lang="ts">
-import {  RiCarLine, RiRefreshLine } from '@remixicon/vue';
+import {  RiCarLine, RiMoreFill, RiRefreshLine } from '@remixicon/vue';
 import { onMounted, ref, watch } from 'vue';
 import {  RadioButton , type PageState} from 'primevue';
 import LSInput from '../../components/system/LSInput.vue';
+import Menu from 'primevue/menu';
 import { useSystem } from '../../store/system';
 import LSBtn from '../../components/system/LSBtn.vue';
 import moment from 'moment';
-
 import LSDrawer from '../../components/system/LSDrawer.vue';
 import { isEmptyData, onErrorImage } from '../../utils/global_helper';
 import LSPagination from '../../components/system/LSPagination.vue';
 import LSUpload, { type ChildPublicAPI } from '../../components/system/LSUpload.vue';
 import axios from 'axios';
 import type { CarType } from '../../interface/car_type';
-
+import { useUploadFileStore } from '../../store/upload_file_store';
+import type { FilterType } from '../../interface/filter_type';
+const uploadStore  = useUploadFileStore();
 const system = useSystem();
 const tr  = ref<Record<string,string>>({});
+const filter=ref<FilterType>({page:1,record:10,search:""});
 const isShowDrawer=ref<boolean>(false);
 const isLoadingSave=ref<boolean>(false);
 const isDrawerData=ref<boolean>();
@@ -147,7 +159,31 @@ const onClickButtonRefresh=()=>{
     selectedCard.value = [];
     getListCar();
 }
-
+const menu = ref();
+const items = ref([
+    {
+        label: "Action",
+        items: [
+            {
+                label: 'Update',
+                icon: 'pi pi-pencil',
+                command:()=>{
+                    onClickButtonUpdate()
+                }
+            },
+            {
+                label: 'Delete',
+                icon: 'pi pi-trash',
+                command:()=>{
+                    onClickButtonDelete()
+                }
+            }
+        ]
+    }
+]);
+const toggle = (event:PointerEvent) => {
+    menu.value.toggle(event);
+};
 const verify=ref<boolean>(false);
 const searchtxt=ref<string>("");
 const onClickImage=(value:CarType)=>{
@@ -168,8 +204,7 @@ const getListCar =async()=>{
     try {
         const api = "/api/car/list"; 
         const response = await axios.post(api,
-        {
-        });
+        filter.value);
         isLoading.value = false;
         
         data_card.value = response.data;
@@ -180,16 +215,16 @@ const getListCar =async()=>{
 }
 onMounted(()=>{
     getListCar();
+    if(ref_upload.value) {
+        ref_upload.value.clearFile();
+    }
 })
 const onSelectService=(data:CarType)=>{
-    if(!selectedCard.value.some(s=>s.id==data.id)) selectedCard.value.push(data);
-    else selectedCard.value=selectedCard.value.filter(s=>s.id!=data.id)
-    console.log(selectedCard.value)
+    selectedCard.value = [data];
 }
 watch(searchtxt,()=>{
-    if(!isEmptyData(searchtxt.value)){
-        data_card.value = data_card.value.filter((val)=>val.name.includes(searchtxt.value) || val.englishName.toLowerCase().includes(searchtxt.value) );
-    }else getListCar();
+   filter.value = {...filter.value,search:searchtxt.value};
+    getListCar();
 })
 const onChangeFile=(file:any)=>{
     console.log(file)
@@ -205,6 +240,8 @@ const onClickButtonUpdate=()=>{
         data.value.Name = selectedCard.value[0]?.name || "";
         selectedId.value = selectedCard.value[0]?.id || 0;
         status.value = selectedCard.value[0]?.status?"active":"disabled";
+        console.log("->",selectedCard.value[0]?.pathImage)
+        uploadStore.setPathImage(selectedCard.value[0]?.pathImage||"")
     }
      
     
@@ -255,7 +292,9 @@ const onClickButtonSave= async()=>{
             }
             await axios.post(api,send);
             isLoadingSave.value = false;
-            getListCar();
+            setTimeout(()=>{
+                 getListCar();
+            },800)
             isShowDrawer.value = false;
         } catch (err) {
             console.log(err)
@@ -265,7 +304,8 @@ const onClickButtonSave= async()=>{
 }
 
 const onSelectPage=(page:PageState)=>{
-    data_card.value = data_card.value.slice(page.page,page.rows)
+    filter.value = {...filter.value,page:page.page+1,record:page.rows};
+    getListCar();
 }
 const onClickButtonReset=()=>{
     isReset.value = !isReset.value;

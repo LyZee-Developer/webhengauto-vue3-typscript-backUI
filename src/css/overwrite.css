@@ -83,3 +83,33 @@ background: #f8fafc17 !important;
   text-overflow: ellipsis;
   width: 200px; /* or a percentage, max-width, etc. */
 }
+
+
+
+
+.p-menu-item-link{
+    column-gap: 15px !important; 
+}
+.p-menu-list{
+    padding: 13px 8px !important;
+}
+.p-menu-item-label{
+    font-size: 14px !important;
+}
+.p-menu-overlay{
+    border-radius:17px !important;
+}
+
+
+.dark .p-menu-overlay{
+    background-color: black !important;
+    border: 1px solid rgb(22, 22, 22)  !important;
+}
+
+.dark .p-menu-item:not(.p-disabled) .p-menu-item-content:hover{
+    background: #1a1a1a !important;
+    color:white  !important
+}
+.dark .p-menu-item-label{
+    color:#9ba7a9 !important;
+}

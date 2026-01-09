@@ -26,7 +26,7 @@
          >
             <div class="flex gap-x-3 items-center">
                 <div @click="OnPreviewImage" class="w-[60px] h-[60px] bd-card-1 rounded-xl overflow-hidden">
-                    <img :src="previewImage" @error="onErrorImage" class="w-full h-full object-cover" alt="">
+                    <img :src="`${GlobalText.url.hostUrl+uploadStore.pathImage}`" @error="onErrorImage" class="w-full h-full object-cover" alt="">
                 </div>
                 <div class="text-[14px] color-3 truncate">{{ dataModel?.name }}</div>
             </div>
@@ -48,9 +48,11 @@ import { computed, ref, watch } from 'vue';
 import { GlobalText, isEmptyData, onErrorImage } from '../../utils/global_helper';
 import { useSystem } from '../../store/system';
 import type { CarType } from '../../interface/car_type';
+import { useUploadFileStore } from '../../store/upload_file_store';
 const emit = defineEmits(["onChangeFile"])
 const prop = defineProps(["isMulti"])
 const isMulti = computed(()=>prop.isMulti || false)
+const uploadStore  = useUploadFileStore();
 const ref_file=ref<HTMLInputElement | null>();
 const files = ref< File[] | FileList>();
 const previewImage = ref<string>("");
@@ -67,27 +69,36 @@ const onSelectFileUpload=()=>{
 }
 export interface ChildPublicAPI {
   clearFile: () => void;
+  setPathImage: (pathImage:string) => void;
 }
 const clearFile =()=>{
     previewImage.value = "";
-    files.value = []
+    files.value = [];
+    if(ref_file.value){
+        ref_file.value.value = '';
+    }
+    previewImage.value = "";
+}
+const setPathImage =(pathImage:string)=>{
+    // previewImage.value = pathImage;
+    console.log("we got the path: ",pathImage)
 }
 
 
 defineExpose<ChildPublicAPI>({
-    clearFile
+    clearFile,
+    setPathImage,
 })
-watch(isDrawer,()=>{
-    if(isDrawer){
-        previewImage.value = GlobalText.url.hostUrl + dataModel.value?.pathImage;
-    }
-},{deep:true,immediate:true})
+// watch(isDrawer,()=>{
+//     if(isDrawer){
+//         previewImage.value = GlobalText.url.hostUrl + dataModel.value?.pathImage;
+//     }
+// },{deep:true,immediate:true})
 
 const OnPreviewImage=()=>{
-    if(!isEmptyData(previewImage.value)){
-        system.setPathImage(previewImage.value)
-        system.setIsShowImage(true);
-    }
+    if(!isEmptyData(previewImage.value))system.setPathImage(previewImage.value)
+    else system.setPathImage(isDrawer.value?GlobalText.url.hostUrl+uploadStore.pathImage: previewImage.value)
+    system.setIsShowImage(true);
 }
 const changeFile=(e:Event)=>{
     const target = e.target as HTMLInputElement;
@@ -119,9 +130,11 @@ if (file && file.type.startsWith('image/')) {
         };
         // Read the file content as a Data URL (which is a Base64 string)
         reader.readAsDataURL(file);
+        console.log(111)
   } else {
     alert('Please select a valid image file.');
     base64Image.value = '';
+    console.log(222)
   }
   
 };

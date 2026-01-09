@@ -1,5 +1,6 @@
 export interface ServiceType{
     id:number,
+    recordCount:number,
     name:string,
     englishName:string,
     createdDate:string,

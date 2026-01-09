@@ -18,29 +18,37 @@
                         <div class="max-[430px]:w-[180px]"><LSInput :placeholder="tr.search_here" v-model="searchtxt"/></div>
                     </div>
                     <div class="flex gap-x-3">
-                        <LSBtn label="update" type="update" class="disabled"
+                        <!-- <LSBtn label="update" type="update" class="disabled"
                         @click-on-button="onClickButtonUpdate"
                         :is-disabled="selectedService.length==0 || selectedService.length>1"
                         :isHasIcon="true"/>
                         <LSBtn :label="tr.delete" type="delete" class="disabled"
                         @click-on-button="onClickButtonDelete"
                         :is-disabled="selectedService.length==0"
-                        :isHasIcon="true"/>
+                        :isHasIcon="true"/> -->
                     </div>
                 </div>
                 <div class="grid pt-4 grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-4">
                     <div @click="()=>onSelectService(value)" 
-                    :class="`w-full rounded-2xl p-3 cursor-pointer bd-card-1 ${selectedService.some(v=>v.id==value.id)?'bd-system':''}`" 
+                    :class="`w-full relative rounded-2xl p-3 cursor-pointer bd-card-1 `" 
                     v-if="data_card.length>0 && !isLoading" 
                     v-for="value in data_card">
+                         <div class="absolute right-3 top-2 flex justify-center items-center h-[20px] w-[20px] " @click="toggle">
+                                <RiMoreFill size="18px" class="color-3" aria-haspopup="true" />
+                        </div>
                         <div class="flex gap-x-3">
                             <div class="flex flex-col gap-y-1">
-                                <div class="text-[15px] color-4">{{ value.name }}</div>
+                                    <div class="flex gap-x-2 items-center">
+                                    <div class="text-[15px] color-4">{{ value.name }}</div>
+                                    <div v-if="value.status" class="w-[8px] h-[8px] rounded-full bg-green-400"></div>
+                                    <div v-else class="w-[8px] h-[8px] rounded-full bg-red-400"></div>
+                                </div>
                                 <div class="text-[13px] color-2">{{ value.englishName }}</div>
                             </div>
+                                
                         </div>
                         <div class="w-full flex justify-end color-3 text-[12px]">
-                                <span>@{{ value.createdBy }}</span><span>{{ moment(value.createdDate).format('LL') }}</span>
+                                <span>@lyzee</span><span>{{ moment().format('LL') }}</span>
                         </div>
                     </div>
                     <div 
@@ -57,13 +65,14 @@
                             <div class="text-[15px] color-4 w-[48px] h-[15px] rounded-md bg-card animate-pulse"></div>
                         </div>
                     </div>
-                    <div v-else class="w-full rounded-lg color-2 p-3 h-[100px] flex justify-center items-center bg-card">
+                    <div v-else class="w-full rounded-lg color-2 p-3 text-[13px] h-[100px] flex justify-center items-center bg-card">
                         {{ tr.no_data_available }}
                     </div>
                 </div>
             </div>
-            <LSPagination :row-btn="5" :total-record="data_card.length" class="mt-4 flex justify-end max-[430px]:justify-center" @onSelectPage="onSelectPage"/>
+            <LSPagination :row-btn="5" :total-record="totalRecord" class="mt-4 flex justify-end max-[430px]:justify-center" @onSelectPage="onSelectPage"/>
         </div>
+         <Menu ref="menu" id="overlay_menu" :model="items" :popup="true" ></Menu>
         <LSDrawer v-model="isShowDrawer">
             <template #header>
                 {{ tr.create }}
@@ -107,21 +116,24 @@
 </template>
 
 <script setup lang="ts">
-import {  RiRefreshLine, RiToolsLine } from '@remixicon/vue';
+import {  RiMoreFill, RiRefreshLine, RiToolsLine } from '@remixicon/vue';
 import { onMounted, ref, watch } from 'vue';
 import {  RadioButton , type PageState} from 'primevue';
 import LSInput from '../../components/system/LSInput.vue';
 import { useSystem } from '../../store/system';
 import LSBtn from '../../components/system/LSBtn.vue';
 import moment from 'moment';
-
+import Menu from 'primevue/menu';
 import LSDrawer from '../../components/system/LSDrawer.vue';
 import { isEmptyData,  } from '../../utils/global_helper';
 import LSPagination from '../../components/system/LSPagination.vue';
 import type { ServiceType } from '../../interface/service_type';
 import axios from 'axios'
+import { m } from 'vue-router/dist/router-CWoNjPRp.mjs';
+import type { FilterType } from '../../interface/filter_type';
 const system = useSystem();
 const tr  = ref<Record<string,string>>({});
+const filter=ref<FilterType>({page:1,record:10,search:""});
 const isShowDrawer=ref<boolean>(false);
 const isLoadingSave=ref<boolean>(false);
 const isLoading=ref<boolean>(false);
@@ -133,24 +145,54 @@ const verify=ref<boolean>(false);
 const searchtxt=ref<string>("");
 const status=ref<string>("active");
 const selectedId=ref<number>(0);
+const totalRecord=ref<number>(0);
 const data =ref({
     Name:"",
     EnglishName:"",
     IsDisabled:false,
 })
+
 const getListServiceType =async()=>{
     isLoading.value = true;
     try {
         const api = "/api/service_type/list"; 
-        const response = await axios.post(api,
-        {
-        });
+        const response = await axios.post(api,filter);
         isLoading.value = false;
         data_card.value = response.data;
+        if(data_card.value.length > 0 ) {
+            totalRecord.value = data_card.value[0]?.recordCount || 0;
+        }
+        
     } catch (err) {
         console.log(err)
     } 
 }
+
+const menu = ref();
+const items = ref([
+    {
+        label: "Action",
+        items: [
+            {
+                label: 'Update',
+                icon: 'pi pi-pencil',
+                command:()=>{
+                    onClickButtonUpdate()
+                }
+            },
+            {
+                label: 'Delete',
+                icon: 'pi pi-trash',
+                command:()=>{
+                    onClickButtonDelete()
+                }
+            }
+        ]
+    }
+]);
+const toggle = (event:PointerEvent) => {
+    menu.value.toggle(event);
+};
 const onClickButtonRefresh=()=>{
     isLoading.value = true;
     getListServiceType();
@@ -208,7 +250,9 @@ const onClickButtonSave=async()=>{
                 status:status.value=="active"
             });
             isLoadingSave.value =false;
-            getListServiceType();
+            setTimeout(()=>{
+                getListServiceType();
+            },500)
             isShowDrawer.value = false;
         } catch (err) {
             console.log(err)
@@ -218,12 +262,11 @@ const onClickButtonSave=async()=>{
     console.log(status.value)
 }
 const onSelectService=(data:ServiceType)=>{
-    if(!selectedService.value.some(v=>v.id==data.id)) selectedService.value.push(data);
-    else selectedService.value=selectedService.value.filter(s=>s.id!=data.id)
-    console.log(selectedService.value)
+    selectedService.value = [data];
 }
 const onSelectPage=(page:PageState)=>{
-    data_card.value = data_card.value.slice(page.page,page.rows)
+    filter.value = {...filter.value,page:page.page+1,record:page.rows};
+    getListServiceType();
 }
 const onClickButtonReset=()=>{
     isReset.value = !isReset.value;

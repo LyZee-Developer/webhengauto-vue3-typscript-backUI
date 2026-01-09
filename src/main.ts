@@ -11,6 +11,7 @@ import Tooltip from 'primevue/tooltip';
 import ToastService from 'primevue/toastservice';
 import ConfirmationService from 'primevue/confirmationservice';
 const app = createApp(App);
+app.config.globalProperties.Host = 'Global fix data'
 app.directive('tooltip', Tooltip);
 const pinia = createPinia();
 app.use(pinia);
