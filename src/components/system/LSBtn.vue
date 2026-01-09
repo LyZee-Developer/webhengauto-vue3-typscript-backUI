@@ -6,7 +6,7 @@
                         label: { class: 'text-[15px] font-medium' }
                     }"
                 :loading="prop.isLoading"
-                 icon="pi pi-search" @click="onClickButton" >
+                 @click="onClickButton" >
                     <template #icon v-if="isHasIcon">
                         <RiSaveLine size="15px" class="font-medium" v-if="type.toLowerCase()=='save'"/>
                         <RiCloseLine size="15px" v-else-if="type.toLowerCase()=='cancel'"/>

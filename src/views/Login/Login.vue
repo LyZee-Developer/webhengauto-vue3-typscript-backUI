@@ -41,9 +41,15 @@
        </div>
        <div class="color-2 font-normal text-[13px] text-center">Already have an account ? <span class="cursor-pointer color-system" @click="onSwitchLogin">{{ isLogin?"Login":"Create New" }}</span></div>
        <div class="w-full flex-col gap-3">
-          <div v-for="value in [1,2]" class="flex gap-x-4 items-center w-full bd-card p-4 mb-4 rounded-sm">
-              <img :src="value==1?google:apple" class="w-[22px] h-[22px]" alt=""> 
-              <p class="color-3 text-[14px]">Continues with {{ value==1?'Google':'Apple' }}</p>
+           <GoogleLogin :callback="callback" class="w-full">
+            <div class="flex gap-x-4 items-center w-full bd-card p-4 mb-4 rounded-sm">
+                <img :src="google" class="w-[22px] h-[22px]" alt=""> 
+                <p class="color-3 text-[14px]">Continues with Google</p>
+            </div>
+          </GoogleLogin>
+          <div class="flex gap-x-4 items-center w-full bd-card p-4 mb-4 rounded-sm">
+              <img :src="apple" class="w-[22px] h-[22px]" alt=""> 
+              <p class="color-3 text-[14px]">Continues with Apple</p>
           </div>
           <div class="text-[11px] color-2 text-center">
             The website was developed by <span class="color-system">@Ly Leangseng</span>
@@ -61,6 +67,9 @@ import apple from '../../assets/logo/apple.svg'
 import { useRouter } from 'vue-router';
 import { isEmptyData, ToastMessage } from '../../utils/global_helper';
 import { style } from '../../css/css';
+import { decodeCredential } from 'vue3-google-login'
+import { GoogleLogin } from 'vue3-google-login';
+import axios from 'axios';
 const username = ref("")
 const password = ref("")
 const confirm_password = ref("")
@@ -91,7 +100,25 @@ const OnClickBtnLogin=()=>{
       ToastMessage({type:"error",detail: "Your account is incorrect"})
     }
 }
-
+const callback = (response:any) => {
+  // This callback is triggered upon successful sign-in
+  console.log("Handle the response", response)
+  // getUserAccountFromGoogle(response.code)
+  route.push('/')
+  setTimeout(() => {
+    ToastMessage({type:"success",detail: "Login successfully!"})
+  }, 300);
+  // Decode the JWT credential to get user data
+  // const userData = decodeCredential(response.credential)
+  // console.log("User Data", userData)
+  
+  // Send the JWT to your backend for validation and session management
+}
+// const getUserAccountFromGoogle=async(code:string)=>{
+//   console.log("access to api google")
+//   var result = await axios.post('/api/auth/google', {code})
+//   console.log(result.data)
+// }
 const onSwitchLogin=()=>{
   isLogin.value=!isLogin.value;
   isClearError.value  = true;
