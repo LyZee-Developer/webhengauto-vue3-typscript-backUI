@@ -28,7 +28,7 @@
                 <div @click="OnPreviewImage" class="w-[60px] h-[60px] bd-card-1 rounded-xl overflow-hidden">
                     <img :src="`${GlobalText.url.hostUrl+uploadStore.pathImage}`" @error="onErrorImage" class="w-full h-full object-cover" alt="">
                 </div>
-                <div class="text-[14px] color-3 truncate">{{ dataModel?.name }}</div>
+                <div class="text-[14px] color-3 truncate">{{ dataModel?.pathImage.split("/")[dataModel?.pathImage.split("/").length-1] }}</div>
             </div>
             <div @click="removeImage" class="w-[40px] flex justify-center cursor-pointer items-center h-[40px] rounded-full hover:bg-[#42424217]">
                 <RiCloseLine size="20px" class="text-red-500 "/>

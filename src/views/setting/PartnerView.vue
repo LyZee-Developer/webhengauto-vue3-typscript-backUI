@@ -124,6 +124,7 @@ import LSUpload, { type ChildPublicAPI } from '../../components/system/LSUpload.
 import axios from 'axios';
 import { UrlAPI } from '../../utils/Api/url';
 import type { FilterType } from '../../interface/filter_type';
+import { useUploadFileStore } from '../../store/upload_file_store';
 const isDrawerData=ref<boolean>();
 const system = useSystem();
 const tr  = ref<Record<string,string>>({});
@@ -139,6 +140,7 @@ const isReset=ref<boolean>(false);
 const filter=ref<FilterType>({page:1,record:10,search:""});
 const totalRecord=ref<number>(0);
 const selectedId=ref<number>(0);
+const uploadStore = useUploadFileStore();
 const ref_upload=ref<ChildPublicAPI  | null>(null);
 const verify=ref<boolean>(false);
 const onClickImage=(value:PartnerType)=>{
@@ -185,6 +187,7 @@ const onClickButtonUpdate=()=>{
         data.value.Name = selected.value?.name || "";
         selectedId.value = selected.value?.id || 0;
         status.value = selected.value?.status?"active":"disabled";
+        uploadStore.setPathImage(selected.value?.pathImage||"")
     }
     
     

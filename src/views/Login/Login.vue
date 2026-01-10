@@ -24,13 +24,13 @@
           type="password"
            v-model:is-clear-error="isClearError"
           v-model:verify="verify"
-          :invalid="isEmptyData(password)"
+          :invalid="isEmptyData(password) || differentPassword"
           label="Password"/>
           <LSInput v-if="isLogin"
           v-model="confirm_password" 
            v-model:verify="verify"
           v-model:is-clear-error="isClearError"
-          :invalid="isEmptyData(confirm_password)"
+          :invalid="isEmptyData(confirm_password) || differentPassword"
           placeholder="Enter cornfirm password"
           :required="true"
              type="password"
@@ -41,6 +41,7 @@
        </div>
        <div class="color-2 font-normal text-[13px] text-center">Already have an account ? <span class="cursor-pointer color-system" @click="onSwitchLogin">{{ isLogin?"Login":"Create New" }}</span></div>
        <div class="w-full flex-col gap-3">
+      
            <GoogleLogin :callback="callback" class="w-full">
             <div class="flex gap-x-4 items-center w-full bd-card p-4 mb-4 rounded-sm">
                 <img :src="google" class="w-[22px] h-[22px]" alt=""> 
@@ -59,7 +60,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import  LSInput from '../../components/system/LSInput.vue';
 import LSBtn from '../../components/system/LSBtn.vue';
 import google from '../../assets/logo/google.svg'
@@ -67,7 +68,6 @@ import apple from '../../assets/logo/apple.svg'
 import { useRouter } from 'vue-router';
 import { isEmptyData, ToastMessage } from '../../utils/global_helper';
 import { style } from '../../css/css';
-import { decodeCredential } from 'vue3-google-login'
 import { GoogleLogin } from 'vue3-google-login';
 import axios from 'axios';
 const username = ref("")
@@ -75,10 +75,11 @@ const password = ref("")
 const confirm_password = ref("")
 const route = useRouter()
 const isLogin = ref<boolean>(false)
+const differentPassword = ref<boolean>(false)
 const aniLogin = ref<boolean>(false)
 const isClearError = ref<boolean>(false)
 const verify = ref<boolean>(false)
-const OnClickBtnLogin=()=>{
+const OnClickBtnLogin=async()=>{
     verify.value = !verify.value;
     if(isEmptyData(username.value) || isEmptyData(password.value)){
       ToastMessage({type:"error",detail: "Username or Password is required!"})
@@ -88,17 +89,60 @@ const OnClickBtnLogin=()=>{
       ToastMessage({type:"error",detail: "Confirm is required!"})
       return;
     }
-    if(username.value =="admin" && password.value=="Work@123"){
-        if(isLogin.value && password.value != confirm_password.value){
-          ToastMessage({type:"error",detail: "Password and Confirm are differenc value!"})
-          return;
-        }
-        route.push('/')
-        ToastMessage({type:"success",detail: "Login successfully!"})
-        localStorage.setItem("isHasLogin","Yes")
-    }else{
-      ToastMessage({type:"error",detail: "Your account is incorrect"})
+    if(password.value != confirm_password.value && isLogin.value){
+      ToastMessage({type:"error",detail: "Make sure your password and confirm password are the same!"})
+      return;
     }
+    if(isLogin.value){
+      //here got create user
+        try {
+            const api = "/api/auth_access/create"; 
+            await axios.post(api,
+              { 
+                  // "UserId":83,
+                  "type":"A", //A(Admin) || O(Other
+                  "userName":username.value,
+                  "password": password.value,
+                  "status":true
+              }
+            );
+            ToastMessage({type:"success",detail: "Create account successfully"})
+            return 
+        } catch (err:any) {
+          if(err?.response.data.Message.split(" ").includes("duplicate")){
+              ToastMessage({type:"error",detail: "Username has already name!"})
+          }
+          return; 
+        } 
+    }else{
+      try {
+            const api = `api/auth_access/login?username=${username.value}&password=${password.value}`; 
+            var data = await axios.get(api);
+            if(data.data) route.push('/')
+            ToastMessage({type:data.data?"success":"error",detail: data.data?"Login successfully":"Login fail"})
+            console.log("data",)
+            return 
+        } catch (err:unknown) {
+            if (err instanceof Error) {
+              ToastMessage({type:"error",detail: err.message})
+            } else {
+              // Handle cases where a non-Error value was thrown
+              console.error('An unknown error occurred:', err);
+            }
+          return; 
+        } 
+    }
+    // if( =="admin" && password.value=="Work@123"){
+    //     if(isLogin.value && password.value != confirm_password.value){
+    //       ToastMessage({type:"error",detail: "Password and Confirm are differenc value!"})
+    //       return;
+    //     }
+    //     route.push('/')
+    //     ToastMessage({type:"success",detail: "Login successfully!"})
+    //     localStorage.setItem("isHasLogin","Yes")
+    // }else{
+    //   ToastMessage({type:"error",detail: "Your account is incorrect"})
+    // }
 }
 const callback = (response:any) => {
   // This callback is triggered upon successful sign-in
@@ -123,6 +167,11 @@ const onSwitchLogin=()=>{
   isLogin.value=!isLogin.value;
   isClearError.value  = true;
 }
+watch(isClearError,()=>{
+  username.value="";
+  password.value="";
+  confirm_password.value="";
+},{deep:true,immediate:true})
 const onClickButtonLogin=()=>{
   OnClickBtnLogin()
     aniLogin.value = true;
@@ -141,4 +190,24 @@ const onKeyDown=(e:KeyboardEvent)=>{
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+  .full-screen-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw; /* 100% of the viewport width */
+  height: 100vh; /* 100% of the viewport height */
+  background-color: rgba(0, 0, 0, 0.8); /* Dark background with opacity */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Ensure it's above other content */
+}
+
+.login-container {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  /* Add more styling for the login box itself */
+}
+</style>

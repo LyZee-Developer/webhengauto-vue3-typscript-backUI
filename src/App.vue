@@ -19,10 +19,10 @@ import LSConfirm from './components/system/LSConfirm.vue';
   const router = useRouter();
   const system = useSystem();
   onMounted(()=>{
-      var lang = localStorage.getItem("lang")
-      if(lang!=null)system.setCountry(JSON.parse(lang))
-      var isHasLogin = localStorage.getItem("isHasLogin");
-      if(isEmptyData(isHasLogin)) router.push('/login')
+      // var lang = localStorage.getItem("lang")
+      // if(lang!=null)system.setCountry(JSON.parse(lang))
+      // var isHasLogin = localStorage.getItem("isHasLogin");
+      // if(isEmptyData(isHasLogin)) router.push('/login')
   })
   watch(system,()=>{
      console.log("working33")
