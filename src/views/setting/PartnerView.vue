@@ -120,7 +120,7 @@ import { isEmptyData, onErrorImage } from '../../utils/global_helper';
 import LSPagination from '../../components/system/LSPagination.vue';
 // import { partner_data } from '../../data_fix/partner_fix';
 import type { PartnerType } from '../../interface/partner_type';
-import LSUpload, { type ChildPublicAPI } from '../../components/system/LSUpload.vue';
+import LSUpload from '../../components/system/LSUpload.vue';
 import axios from 'axios';
 import { UrlAPI } from '../../utils/Api/url';
 import type { FilterType } from '../../interface/filter_type';
@@ -141,7 +141,7 @@ const filter=ref<FilterType>({page:1,record:10,search:""});
 const totalRecord=ref<number>(0);
 const selectedId=ref<number>(0);
 const uploadStore = useUploadFileStore();
-const ref_upload=ref<ChildPublicAPI  | null>(null);
+// const ref_upload=ref<ChildPublicAPI  | null>(null);
 const verify=ref<boolean>(false);
 const onClickImage=(value:PartnerType)=>{
     if(!isEmptyData(value.pathImage)){

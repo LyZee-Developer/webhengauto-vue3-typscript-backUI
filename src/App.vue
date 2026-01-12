@@ -13,10 +13,10 @@ import { useSystem } from './store/system';
 import MobileMenuSlide from './components/system/MobileMenuSlide.vue';
 import { isEmptyData } from './utils/global_helper';
 import LSToast from './components/system/LSToast.vue';
-import { useRouter } from 'vue-router';
+// import { useRouter } from 'vue-router';
 import LSPreviewImage from './components/system/LSPreviewImage.vue';
 import LSConfirm from './components/system/LSConfirm.vue';
-  const router = useRouter();
+  // const router = useRouter();
   const system = useSystem();
   onMounted(()=>{
       // var lang = localStorage.getItem("lang")

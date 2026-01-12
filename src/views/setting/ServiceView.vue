@@ -129,7 +129,7 @@ import { isEmptyData,  } from '../../utils/global_helper';
 import LSPagination from '../../components/system/LSPagination.vue';
 import type { ServiceType } from '../../interface/service_type';
 import axios from 'axios'
-import { m } from 'vue-router/dist/router-CWoNjPRp.mjs';
+// import { m } from 'vue-router/dist/router-CWoNjPRp.mjs';
 import type { FilterType } from '../../interface/filter_type';
 const system = useSystem();
 const tr  = ref<Record<string,string>>({});

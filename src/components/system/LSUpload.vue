@@ -44,7 +44,7 @@
 
 <script setup lang="ts">
 import { RiCloseLine, RiUploadCloudLine } from '@remixicon/vue';
-import { computed, ref, watch } from 'vue';
+import { computed, ref } from 'vue';
 import { GlobalText, isEmptyData, onErrorImage } from '../../utils/global_helper';
 import { useSystem } from '../../store/system';
 import type { CarType } from '../../interface/car_type';
