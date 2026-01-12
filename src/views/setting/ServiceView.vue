@@ -128,9 +128,9 @@ import LSDrawer from '../../components/system/LSDrawer.vue';
 import { isEmptyData,  } from '../../utils/global_helper';
 import LSPagination from '../../components/system/LSPagination.vue';
 import type { ServiceType } from '../../interface/service_type';
-import axios from 'axios'
 // import { m } from 'vue-router/dist/router-CWoNjPRp.mjs';
 import type { FilterType } from '../../interface/filter_type';
+import { useHttp } from '../../utils/useHttpRequestion';
 const system = useSystem();
 const tr  = ref<Record<string,string>>({});
 const filter=ref<FilterType>({page:1,record:10,search:""});
@@ -154,18 +154,18 @@ const data =ref({
 
 const getListServiceType =async()=>{
     isLoading.value = true;
-    try {
-        const api = "/api/service_type/list"; 
-        const response = await axios.post(api,filter);
-        isLoading.value = false;
-        data_card.value = response.data;
-        if(data_card.value.length > 0 ) {
-            totalRecord.value = data_card.value[0]?.recordCount || 0;
-        }
-        
-    } catch (err) {
-        console.log(err)
-    } 
+    await useHttp({
+        url:"/api/service_type/list",
+        data:filter.value,
+        method:"POST",
+        responseResult:(result)=>{
+            isLoading.value = false;
+            data_card.value = result.data;
+            if(data_card.value.length > 0 ) {
+                totalRecord.value = data_card.value[0]?.recordCount || 0;
+            }
+        },
+    })
 }
 
 const menu = ref();
@@ -216,10 +216,13 @@ const onClickButtonDelete=()=>{
         onSave:()=>{
             var Ids = selectedService.value.map(val=>val.id);
             Ids.map(async(val)=>{
-                const api = `/api/service_type/delete?id=${val}`; 
-                await axios.get(api);
-                getListServiceType();
-                selectedService.value = []
+                await useHttp({
+                url:`/api/service_type/delete?id=${val}`,
+                responseResult:()=>{
+                        getListServiceType();
+                        selectedService.value = []
+                    },
+                })
             })
         }
     })
@@ -240,26 +243,24 @@ const onClickButtonSave=async()=>{
     verify.value = !verify.value;
     isLoadingSave.value =true;
     if(!isEmptyData(data.value.EnglishName) && !isEmptyData(data.value.Name)){
-        try {
-            const api = `/api/service_type/${isCreate.value?"create":"update"}`; 
-            await axios.post(api,
-            {
-                id:isCreate.value?0:selectedId.value,
-                englishName:data.value.EnglishName,
-                name:data.value.Name,
-                status:status.value=="active"
-            });
-            isLoadingSave.value =false;
-            setTimeout(()=>{
-                getListServiceType();
-            },500)
-            isShowDrawer.value = false;
-        } catch (err) {
-            console.log(err)
-        } 
+        await useHttp({
+                url:`/api/service_type/${isCreate.value?"create":"update"}`,
+                data:{
+                    id:isCreate.value?0:selectedId.value,
+                    englishName:data.value.EnglishName,
+                    name:data.value.Name,
+                    status:status.value=="active"
+                },
+                method:"POST",
+                responseResult:()=>{
+                    isLoadingSave.value =false;
+                    setTimeout(()=>{
+                        getListServiceType();
+                    },500)
+                    isShowDrawer.value = false;
+                },
+            })
     }
-    console.log(data.value)
-    console.log(status.value)
 }
 const onSelectService=(data:ServiceType)=>{
     selectedService.value = [data];

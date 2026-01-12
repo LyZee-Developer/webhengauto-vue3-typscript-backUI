@@ -25,7 +25,6 @@ import LSConfirm from './components/system/LSConfirm.vue';
       // if(isEmptyData(isHasLogin)) router.push('/login')
   })
   watch(system,()=>{
-     console.log("working33")
     var theme = localStorage.getItem("theme")
     var lang = localStorage.getItem("lang")
     if(!isEmptyData(theme)){

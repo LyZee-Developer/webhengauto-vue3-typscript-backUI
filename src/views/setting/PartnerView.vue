@@ -116,15 +116,15 @@ import LSBtn from '../../components/system/LSBtn.vue';
 import moment from 'moment';
 import Menu from 'primevue/menu';
 import LSDrawer from '../../components/system/LSDrawer.vue';
-import { isEmptyData, onErrorImage } from '../../utils/global_helper';
+import { GlobalText, isEmptyData, onErrorImage } from '../../utils/global_helper';
 import LSPagination from '../../components/system/LSPagination.vue';
 // import { partner_data } from '../../data_fix/partner_fix';
 import type { PartnerType } from '../../interface/partner_type';
 import LSUpload from '../../components/system/LSUpload.vue';
-import axios from 'axios';
 import { UrlAPI } from '../../utils/Api/url';
 import type { FilterType } from '../../interface/filter_type';
 import { useUploadFileStore } from '../../store/upload_file_store';
+import { useHttp } from '../../utils/useHttpRequestion';
 const isDrawerData=ref<boolean>();
 const system = useSystem();
 const tr  = ref<Record<string,string>>({});
@@ -145,7 +145,7 @@ const uploadStore = useUploadFileStore();
 const verify=ref<boolean>(false);
 const onClickImage=(value:PartnerType)=>{
     if(!isEmptyData(value.pathImage)){
-        system.setPathImage(`http://localhost:4433/${value.pathImage}`)
+        system.setPathImage(`${GlobalText.url.hostUrl}/${value.pathImage}`)
         system.setIsShowImage(true)
     }
 }
@@ -200,10 +200,14 @@ const onClickButtonDelete=()=>{
             console.log("cancel")
         },
         onSave:async()=>{
-            const api = `${UrlAPI.partner.delete}?id=${selected.value?.id}`; 
-                await axios.get(api);
-                getListPartner();
-                selected.value = null
+            await useHttp({
+                url:`${UrlAPI.partner.delete}?id=${selected.value?.id}`,
+                data:filter.value,
+                responseResult:()=>{
+                    getListPartner();
+                    selected.value = null
+                },
+            })
         }
     })
     system.setIsShowConfirm(true)
@@ -214,16 +218,17 @@ const toggle = (event:PointerEvent) => {
 
 const getListPartner =async()=>{
     isLoading.value = true;
-    try {
-        const api = UrlAPI.partner.list; 
-        const response = await axios.post(api,filter.value);
-        isLoading.value = false;
-        data_card.value = response.data;
-        console.log("List partner",data_card.value)
-        totalRecord.value = data_card.value[0]?.recordCount || 0;
-    } catch (err) {
-        console.log(err)
-    } 
+    await useHttp({
+        url:`${UrlAPI.partner.list}`,
+        data:filter.value,
+        method:"Post",
+        responseResult:(result)=>{
+            isLoading.value = false;
+            data_card.value = result.data;
+            console.log("List partner",data_card.value)
+            totalRecord.value = data_card.value[0]?.recordCount || 0;
+        },
+    })
 }
 onMounted(()=>{
     getListPartner();
@@ -240,33 +245,35 @@ const onClickButtonSave= async()=>{
     console.log(data.value)
     if(!isEmptyData(data.value.EnglishName) && !isEmptyData(data.value.Name)){
         isLoadingSave.value = true;
-        try {
-            const api = `${isCreate.value?UrlAPI.partner.create:`${UrlAPI.partner.update}`}`; 
-            var send = {
-                id:isCreate.value?0:selectedId.value,
-                englishName:data.value.EnglishName,
-                name:data.value.Name,
-                status:status.value=="active",
-                upload :{}
+        const api = `${isCreate.value?UrlAPI.partner.create:`${UrlAPI.partner.update}`}`; 
+        var send = {
+            id:isCreate.value?0:selectedId.value,
+            englishName:data.value.EnglishName,
+            name:data.value.Name,
+            status:status.value=="active",
+            upload :{}
+        }
+        if(!isEmptyData(fileSource.value)){
+            send.upload = {
+                type:fileSource.value.file.type,
+                typeImage:"png",
+                size:fileSource.value.file.size,
+                name:fileSource.value.file.name,
+                base64Text:fileSource.value.base64
             }
-            if(!isEmptyData(fileSource.value)){
-                send.upload = {
-                    type:fileSource.value.file.type,
-                    typeImage:"png",
-                    size:fileSource.value.file.size,
-                    name:fileSource.value.file.name,
-                    base64Text:fileSource.value.base64
-                }
-            }
-            await axios.post(api,send);
-            isLoadingSave.value = false;
-            setTimeout(()=>{
-                getListPartner();
-            },500)
-            isShowDrawer.value = false;
-        } catch (err) {
-            console.log(err)
-        } 
+        }
+        await useHttp({
+                url:`${api}`,
+                data:send,
+                method:"Post",
+                responseResult:()=>{
+                    isLoadingSave.value = false;
+                    setTimeout(()=>{
+                        getListPartner();
+                    },500)
+                    isShowDrawer.value = false;
+                },
+        })
     }
 
 }

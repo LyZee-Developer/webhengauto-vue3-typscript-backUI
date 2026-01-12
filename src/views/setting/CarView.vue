@@ -133,10 +133,10 @@ import LSDrawer from '../../components/system/LSDrawer.vue';
 import { isEmptyData, onErrorImage } from '../../utils/global_helper';
 import LSPagination from '../../components/system/LSPagination.vue';
 import LSUpload, { type ChildPublicAPI } from '../../components/system/LSUpload.vue';
-import axios from 'axios';
 import type { CarType } from '../../interface/car_type';
 import { useUploadFileStore } from '../../store/upload_file_store';
 import type { FilterType } from '../../interface/filter_type';
+import { useHttp } from '../../utils/useHttpRequestion';
 const uploadStore  = useUploadFileStore();
 const system = useSystem();
 const tr  = ref<Record<string,string>>({});
@@ -201,17 +201,16 @@ const data =ref({
 })
 const getListCar =async()=>{
     isLoading.value = true;
-    try {
-        const api = "/api/car/list"; 
-        const response = await axios.post(api,
-        filter.value);
-        isLoading.value = false;
-        
-        data_card.value = response.data;
-        totalRecord.value = data_card.value[0]?.recordCount || 0;
-    } catch (err) {
-        console.log(err)
-    } 
+    await useHttp({
+        url:"/api/car/list",
+        data:filter.value,
+        method:"post",
+        responseResult:(result)=>{
+            isLoading.value = false;
+            data_card.value = result.data;
+            totalRecord.value = data_card.value[0]?.recordCount || 0;
+        },
+    })
 }
 onMounted(()=>{
     getListCar();
@@ -256,10 +255,15 @@ const onClickButtonDelete=()=>{
         onSave:()=>{
             var Ids = selectedCard.value.map(val=>val.id);
             Ids.map(async(val)=>{
-                const api = `/api/car/delete?id=${val}`; 
-                await axios.get(api);
-                getListCar();
-                selectedCard.value = []
+                await useHttp({
+                    url:`/api/car/delete?id=${val}`,
+                    data:filter.value,
+                    responseResult:(result)=>{
+                        console.log(result)
+                        getListCar();
+                        selectedCard.value = []
+                    },
+                })
             })
         }
     })
@@ -269,38 +273,37 @@ const onClickButtonDelete=()=>{
 
 const onClickButtonSave= async()=>{
     verify.value = !verify.value;
-    console.log("fileSource.value",fileSource.value)
     if(!isEmptyData(data.value.EnglishName) && !isEmptyData(data.value.Name)){
         isLoadingSave.value = true;
-        try {
-            const api = `/api/car/${isCreate.value?"create":"update"}`; 
-            var send = {
-                id:isCreate.value?0:selectedId.value,
-                englishName:data.value.EnglishName,
-                name:data.value.Name,
-                status:status.value=="active",
-                upload :{}
+        var send = {
+            id:isCreate.value?0:selectedId.value,
+            englishName:data.value.EnglishName,
+            name:data.value.Name,
+            status:status.value=="active",
+            upload :{}
+        }
+        if(!isEmptyData(fileSource.value)){
+            send.upload = {
+                type:fileSource.value.file.type,
+                typeImage:"png",
+                size:fileSource.value.file.size,
+                name:fileSource.value.file.name,
+                base64Text:fileSource.value.base64
             }
-            if(!isEmptyData(fileSource.value)){
-                send.upload = {
-                    type:fileSource.value.file.type,
-                    typeImage:"png",
-                    size:fileSource.value.file.size,
-                    name:fileSource.value.file.name,
-                    base64Text:fileSource.value.base64
-                }
-            }
-            await axios.post(api,send);
-            isLoadingSave.value = false;
-            setTimeout(()=>{
-                 getListCar();
-            },800)
-            isShowDrawer.value = false;
-        } catch (err) {
-            console.log(err)
-        } 
+        }
+        await useHttp({
+                    url:`/api/car/${isCreate.value?"create":"update"}`,
+                    data:send,
+                    method:"post",
+                    responseResult:()=>{
+                        isLoadingSave.value = false;
+                        setTimeout(()=>{
+                            getListCar();
+                        },800)
+                        isShowDrawer.value = false;
+                    },
+            })
     }
-
 }
 
 const onSelectPage=(page:PageState)=>{

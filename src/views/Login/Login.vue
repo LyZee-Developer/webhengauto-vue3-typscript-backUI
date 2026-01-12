@@ -69,7 +69,7 @@ import { useRouter } from 'vue-router';
 import { isEmptyData, ToastMessage } from '../../utils/global_helper';
 import { style } from '../../css/css';
 import { GoogleLogin } from 'vue3-google-login';
-import axios from 'axios';
+import { useHttp } from '../../utils/useHttpRequestion';
 const username = ref("")
 const password = ref("")
 const confirm_password = ref("")
@@ -95,54 +95,28 @@ const OnClickBtnLogin=async()=>{
     }
     if(isLogin.value){
       //here got create user
-        try {
-            const api = "/api/auth_access/create"; 
-            await axios.post(api,
-              { 
-                  // "UserId":83,
-                  "type":"A", //A(Admin) || O(Other
-                  "userName":username.value,
-                  "password": password.value,
-                  "status":true
-              }
-            );
-            ToastMessage({type:"success",detail: "Create account successfully"})
-            return 
-        } catch (err:any) {
-          if(err?.response.data.Message.split(" ").includes("duplicate")){
-              ToastMessage({type:"error",detail: "Username has already name!"})
-          }
-          return; 
-        } 
+       await useHttp({
+                url:`/api/auth_access/create`,
+                data:{ 
+                    // "UserId":83,
+                    "type":"A", //A(Admin) || O(Other
+                    "userName":username.value,
+                    "password": password.value,
+                    "status":true
+                },
+                responseResult:()=>{
+                    ToastMessage({type:"success",detail: "Create account successfully"})
+                },
+            })
     }else{
-      try {
-            const api = `api/auth_access/login?username=${username.value}&password=${password.value}`; 
-            var data = await axios.get(api);
-            if(data.data) route.push('/')
-            ToastMessage({type:data.data?"success":"error",detail: data.data?"Login successfully":"Login fail"})
-            console.log("data",)
-            return 
-        } catch (err:unknown) {
-            if (err instanceof Error) {
-              ToastMessage({type:"error",detail: err.message})
-            } else {
-              // Handle cases where a non-Error value was thrown
-              console.error('An unknown error occurred:', err);
-            }
-          return; 
-        } 
+      await useHttp({
+              url:`api/auth_access/login?username=${username.value}&password=${password.value}`,
+              responseResult:(result)=>{
+                  if(result.data) route.push('/')
+                  ToastMessage({type:result.data?"success":"error",detail: result.data?"Login successfully":"Your account is not correct!"})
+              },
+          })
     }
-    // if( =="admin" && password.value=="Work@123"){
-    //     if(isLogin.value && password.value != confirm_password.value){
-    //       ToastMessage({type:"error",detail: "Password and Confirm are differenc value!"})
-    //       return;
-    //     }
-    //     route.push('/')
-    //     ToastMessage({type:"success",detail: "Login successfully!"})
-    //     localStorage.setItem("isHasLogin","Yes")
-    // }else{
-    //   ToastMessage({type:"error",detail: "Your account is incorrect"})
-    // }
 }
 const callback = (response:any) => {
   // This callback is triggered upon successful sign-in

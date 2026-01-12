@@ -21,7 +21,7 @@
             </div>
         </div>
         <div class="w-full h-[80px] rounded-xl pr-4 pl-3 justify-between py-1 items-center bg-card flex gap-x-3"
-         v-else-if="!isMulti && isDrawer && !isEmptyData(dataModel) 
+         v-else-if="!isMulti && isDrawer && !isEmptyData(dataModel) && !isEmptyData(dataModel?.pathImage)
          "
          >
             <div class="flex gap-x-3 items-center">
