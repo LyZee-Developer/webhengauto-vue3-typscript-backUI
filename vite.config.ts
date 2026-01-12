@@ -12,8 +12,8 @@ export default defineConfig({
     proxy:{
       '/api': {
         // target: 'http://34.142.158.113:8093', //server
-        // target: 'http://192.168.0.10:8003', //Server Local
-        target: 'http://localhost:4433', //local
+        target: 'http://192.168.0.10:8003', //Server Local
+        // target: 'http://localhost:4433', //local
         changeOrigin: true,
       }
     }
