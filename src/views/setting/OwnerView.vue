@@ -36,8 +36,9 @@
                     <LSInput :label="tr.enter_sub_description" :required="true" @onTrackHasChange="onTrackHasChange" v-model:isReset="isReset" v-model:verify="isCheck" v-model="values.subDescription" :invalid="isEmptyData(values.subDescription)"/>
                     <LSInput :label="tr.enter_sub_en_description" v-model:verify="isCheck"   v-model:isReset="isReset" v-model="values.subEnglishDescription"/>
                     <LSInput :label="tr.enter_facebook" v-model:verify="isCheck" :required="true" @onTrackHasChange="onTrackHasChange"  v-model:isReset="isReset" v-model="values.facebook" :invalid="isEmptyData(values.facebook)"/>
-                    <LSInput :label="tr.enter_telegram"  v-model:isReset="isReset" v-model="values.instagram"/>
-                    <LSInput :label="tr.enter_telegram" v-model:verify="isCheck" :required="true"  @onTrackHasChange="onTrackHasChange" v-model:isReset="isReset" v-model="values.telegram" :invalid="isEmptyData(values.telegram)"/>
+                    <LSInput :label="tr.enter_telegram"  v-model:isReset="isReset" v-model="values.telegram"/>
+                    <LSInput label="In Link" v-model:verify="isCheck"   @onTrackHasChange="onTrackHasChange" v-model:isReset="isReset" v-model="values.inlink" :invalid="isEmptyData(values.telegram)"/>
+                    <LSInput label="Youtube Link" v-model:verify="isCheck"   @onTrackHasChange="onTrackHasChange" v-model:isReset="isReset" v-model="values.youtube" :invalid="isEmptyData(values.telegram)"/>
                     <LSInput :label="tr.enter_working_info" v-model:verify="isCheck" :required="true"  @onTrackHasChange="onTrackHasChange" v-model:isReset="isReset" v-model="values.workingInfo" :invalid="isEmptyData(values.workingInfo)"/>
             </div>
             <div class="flex flex-col gap-y-3 mt-3">
@@ -54,24 +55,27 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import LSBtn from '../../components/system/LSBtn.vue';
 import { RiCamera4Fill, RiPassportFill } from '@remixicon/vue';
 import LSToolTip from '../../components/system/LSToolTip.vue';
 import LSInput from '../../components/system/LSInput.vue';
 import LSInputArea from '../../components/system/LSInputArea.vue';
-import { isEmptyData } from '../../utils/global_helper';
+import { isEmptyData, ToastMessage } from '../../utils/global_helper';
 import { useSystem } from '../../store/system';
 import { style } from '../../css/css';
 import noImage from '../../assets/system/no-image.jpg'
+import { useHttp } from '../../utils/useHttpRequestion';
 const system = useSystem();
 const tr  = ref<Record<string,string>>({});
-const isHasInfo = ref<boolean>(true)
+const isHasInfo = ref<boolean>(false)
+const isUpdate = ref<boolean>(false)
 const uploadImage = ref<HTMLInputElement | null>(null)
 const trackIsReset = ref<boolean>(false)
 const isScale = ref<boolean>(false)
 const preview = ref<string>("")
 const isCheck = ref<boolean>(false)
+const onwerId = ref<number>(0)
 const isReset = ref<boolean>(false)
 const file = ref<File | null>(null)
 const onFileSelected = (event: Event) => {
@@ -81,6 +85,9 @@ const onFileSelected = (event: Event) => {
   file.value = input.files[0]
   preview.value = URL.createObjectURL(file.value)
 }
+onMounted(async()=>{
+    await getOnwerInfo();
+})
     const onClickUploadImage=()=>{
         isScale.value = true;
         setTimeout(()=>{
@@ -93,6 +100,7 @@ const onFileSelected = (event: Event) => {
         englishName:"",
         phone:"",
         phone1:"",
+        inlink:"",
         telegram:"",
         email:"",
         subDescription:"",
@@ -104,26 +112,98 @@ const onFileSelected = (event: Event) => {
         englishDescription:"",
         workingInfo:""
     })
-const clickOnButton=()=>{
-    isHasInfo.value =!isHasInfo.value;
-}
+
 const clickOnBtnReset=()=>{
     isReset.value = !isReset.value;
     isCheck.value = !isCheck.value;
 }
 const onTrackHasChange=(value:any)=>{
-    console.log("tracking ",value)
     trackIsReset.value = value;
+}
+const clickOnButton=()=>{
+    isHasInfo.value =true;
 }
 watch(system,()=>{
     tr.value = system.language;
 },{deep:true,immediate:true})
 const onClickSave=()=>{
-    console.log("trackIsReset",trackIsReset.value)
+    console.log("trackIsReset",values.value)
     if(!trackIsReset.value) isCheck.value=!trackIsReset.value;
     else isCheck.value = !isCheck.value;
+    // saveData();
+    if(!isInvalidForm()){
+        saveData()
+    }else{
+        ToastMessage({type:"error",detail: "Kindly you information is incorrect!"})
+    }
+}
+const isInvalidForm=():boolean =>  {
+    console.log("check value",values.value)
+    return isEmptyData(values.value.name) || 
+    isEmptyData(values.value.phone) ||
+    isEmptyData(values.value.description) ||
+    isEmptyData(values.value.facebook) ||
+    isEmptyData(values.value.telegram) ||
+    isEmptyData(values.value.workingInfo)
+    ;
 }
 
+const saveData=async()=>{
+   await useHttp({
+        url:`api/owner_info/${isUpdate.value?"update":"create"}`,
+        data:{
+            "id":isUpdate.value?onwerId.value:0,
+            "name":values.value.name,
+            "englishName":values.value.englishName,
+            "phone":values.value.phone,
+            "phone1":values.value.phone1,
+            "email":values.value.email,
+            "description":values.value.description,
+            "descriptionEnglish":values.value.englishDescription,
+            "subDescription":values.value.subDescription,
+            "subDescriptionEnglish":values.value.subEnglishDescription,
+            "facebookUrl":values.value.facebook,
+            "inURL":values.value.instagram,
+            "instagramUrl":values.value.instagram,
+            "youtubeUrl":values.value.youtube,
+            "inUrl":values.value.inlink,
+            "telegramUrl":values.value.telegram,
+            "workingInfo":values.value.workingInfo,
+        },
+        method:"post",
+        responseResult:()=>{
+             ToastMessage({type:"success",detail: `You information have ${isUpdate.value?'update':"create"} already`})
+          
+        }
+    })
+}
+const getOnwerInfo=async()=>{
+   await useHttp({
+        url:"api/owner_info/list",
+        data:{},
+        method:"post",
+        responseResult:(data)=>{
+            isHasInfo.value =data.data.length !==0;
+            isUpdate.value =data.data.length !==0;
+            if(isHasInfo.value){
+                var info = data.data[0];
+                onwerId.value = info.id;
+                values.value = {
+                    ...values.value,
+                    ...info,
+                    telegram: info.telegramUrl,
+                    subEnglishDescription: info.subDescriptionEnglish,
+                    subDescription: info.subDescription,
+                    facebook:info.faceboolUrl,
+                    youtube:info.youtubeUrl,
+                    inlink:info.inUrl,
+                    descriptionEnglish:info.inUrl,
+                    englishDescription:info.descriptionEnglish,
+                }
+            }
+        }
+    })
+}
 </script>
 
 <style scoped>

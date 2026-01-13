@@ -13,16 +13,14 @@ import { useSystem } from './store/system';
 import MobileMenuSlide from './components/system/MobileMenuSlide.vue';
 import { isEmptyData } from './utils/global_helper';
 import LSToast from './components/system/LSToast.vue';
-// import { useRouter } from 'vue-router';
+import { useRouter } from 'vue-router';
 import LSPreviewImage from './components/system/LSPreviewImage.vue';
 import LSConfirm from './components/system/LSConfirm.vue';
-  // const router = useRouter();
+  const router = useRouter();
   const system = useSystem();
   onMounted(()=>{
-      // var lang = localStorage.getItem("lang")
-      // if(lang!=null)system.setCountry(JSON.parse(lang))
-      // var isHasLogin = localStorage.getItem("isHasLogin");
-      // if(isEmptyData(isHasLogin)) router.push('/login')
+      var userLog = sessionStorage.getItem("user");
+      if(userLog==null) router.push('/login')
   })
   watch(system,()=>{
     var theme = localStorage.getItem("theme")

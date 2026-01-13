@@ -26,7 +26,7 @@
          >
             <div class="flex gap-x-3 items-center">
                 <div @click="OnPreviewImage" class="w-[60px] h-[60px] bd-card-1 rounded-xl overflow-hidden">
-                    <img :src="`${GlobalText.url.hostUrl+uploadStore.pathImage}`" @error="onErrorImage" class="w-full h-full object-cover" alt="">
+                    <img :src="`${GlobalText.url.hostUrl+'/'+uploadStore.pathImage}`" @error="onErrorImage" class="w-full h-full object-cover" alt="">
                 </div>
                 <div class="text-[14px] color-3 truncate">{{ dataModel?.pathImage.split("/")[dataModel?.pathImage.split("/").length-1] }}</div>
             </div>
@@ -97,7 +97,7 @@ defineExpose<ChildPublicAPI>({
 
 const OnPreviewImage=()=>{
     if(!isEmptyData(previewImage.value))system.setPathImage(previewImage.value)
-    else system.setPathImage(isDrawer.value?GlobalText.url.hostUrl+uploadStore.pathImage: previewImage.value)
+    else system.setPathImage(isDrawer.value?GlobalText.url.hostUrl+'/'+uploadStore.pathImage: previewImage.value)
     system.setIsShowImage(true);
 }
 const changeFile=(e:Event)=>{

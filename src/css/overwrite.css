@@ -67,6 +67,9 @@ background: #f8fafc17 !important;
 .dark .p-paginator{
     background: #00000000;
 }
+.p-paginator{
+    background: unset !important;
+}
 .dark .p-paginator-page.p-paginator-page-selected{
     background:  #373737 !important;
     color:white;
@@ -112,4 +115,28 @@ background: #f8fafc17 !important;
 }
 .dark .p-menu-item-label{
     color:#9ba7a9 !important;
+}
+
+
+/* For Webkit browsers (Chrome, Safari, Opera, Edge) */
+::-webkit-scrollbar {
+  width: 10px; /* custom width */
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1; /* color of the track */
+}
+
+::-webkit-scrollbar-thumb {
+  background: #181818; /* color of the draggable handle */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #000000; /* color on hover */
+}
+
+/* For Firefox */
+  * {
+  scrollbar-width: thin; /* 'auto' or 'thin' */
+  scrollbar-color: #0a0a0a #f1f1f1; /* thumb color and track color */
 }

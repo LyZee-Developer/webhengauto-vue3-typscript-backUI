@@ -37,7 +37,7 @@
                             </div>
                             <div class="flex gap-x-3">
                                 <div @click="()=>{onClickImage(value)}" class="p-[4px] rounded-full bd-card w-[45px] h-[45px]">
-                                    <img  :src="`http://localhost:4433/${value.pathImage}`" @error="onErrorImage" class="w-full h-full rounded-full object-cover" alt="">
+                                    <img  :src="`${GlobalText.url.hostUrl}/${value.pathImage}`" @error="onErrorImage" class="w-full h-full rounded-full object-cover" alt="">
                                 </div>
                                 <div class="flex flex-col gap-y-1">
                                      <div class="flex gap-x-2 items-center">

@@ -69,6 +69,7 @@ const isShowIconMobile = ref<boolean>(path!="");
                 },
                 onSave:()=>{
                     router.push("/login");
+                    sessionStorage.removeItem("user");
                     system.setIsDark(false)
                     localStorage.setItem("theme",'white')
                     localStorage.removeItem("isHasLogin")

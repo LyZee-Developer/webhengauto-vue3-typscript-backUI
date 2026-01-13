@@ -38,7 +38,7 @@
                         </div>
                         <div class="flex gap-x-3">
                             <div @click="()=>{onClickImage(value)}" class="p-[4px] rounded-full bd-card w-[45px] h-[45px]">
-                                <img  :src="`http://localhost:4433/${value.pathImage}`" @error="onErrorImage" class="w-full h-full rounded-full object-cover" alt="">
+                                <img  :src="`${GlobalText.url.hostUrl}/${value.pathImage}`" @error="onErrorImage" class="w-full h-full rounded-full object-cover" alt="">
                             </div>
                             <div class="flex flex-col gap-y-1">
                                     <div class="flex gap-x-2 items-center">
@@ -130,7 +130,7 @@ import { useSystem } from '../../store/system';
 import LSBtn from '../../components/system/LSBtn.vue';
 import moment from 'moment';
 import LSDrawer from '../../components/system/LSDrawer.vue';
-import { isEmptyData, onErrorImage } from '../../utils/global_helper';
+import { GlobalText, isEmptyData, onErrorImage } from '../../utils/global_helper';
 import LSPagination from '../../components/system/LSPagination.vue';
 import LSUpload, { type ChildPublicAPI } from '../../components/system/LSUpload.vue';
 import type { CarType } from '../../interface/car_type';
@@ -187,8 +187,9 @@ const toggle = (event:PointerEvent) => {
 const verify=ref<boolean>(false);
 const searchtxt=ref<string>("");
 const onClickImage=(value:CarType)=>{
+    console.log("value:",value)
     if(!isEmptyData(value.pathImage)){
-        system.setPathImage(`http://localhost:4433/${value.pathImage}`)
+        system.setPathImage(`${GlobalText.url.hostUrl}/${value.pathImage}`)
         system.setIsShowImage(true)
     }
 }

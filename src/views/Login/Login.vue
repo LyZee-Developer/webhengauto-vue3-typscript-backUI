@@ -104,6 +104,7 @@ const OnClickBtnLogin=async()=>{
                     "password": password.value,
                     "status":true
                 },
+                method:"PoST",
                 responseResult:()=>{
                     ToastMessage({type:"success",detail: "Create account successfully"})
                 },
@@ -112,7 +113,10 @@ const OnClickBtnLogin=async()=>{
       await useHttp({
               url:`api/auth_access/login?username=${username.value}&password=${password.value}`,
               responseResult:(result)=>{
-                  if(result.data) route.push('/')
+                  if(result.data) {
+                    sessionStorage.setItem('user', JSON.stringify({ name: username.value , attempted:true }));
+                    route.push('/')
+                  }
                   ToastMessage({type:result.data?"success":"error",detail: result.data?"Login successfully":"Your account is not correct!"})
               },
           })

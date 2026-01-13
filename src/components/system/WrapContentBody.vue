@@ -31,7 +31,7 @@
                     </div>
                 </div>
             </div>
-            <div class="w-full h-full  py-3 pr-4 max-[430px]:p-0">
+            <div class="w-full h-full  py-3 pr-4 max-[430px]:p-0 max-[430px]:h-[calc(100vh-79px)]">
                 <div class="w-full rounded-2xl max-[430px]:mt-[60px]  p-6 h-full bg-card wrapContent ">
                     <slot></slot>
                 </div>
