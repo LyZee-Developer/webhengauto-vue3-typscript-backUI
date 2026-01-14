@@ -1,4 +1,4 @@
-import {  RiAccountCircleLine, RiBarChartFill, RiBookAiLine,  RiCarLine, RiLockPasswordLine, RiText, RiToolsLine, RiUserCommunityFill, RiUserLine } from "@remixicon/vue";
+import {  RiAccountCircleLine, RiBarChartFill, RiBookAiLine,  RiCarLine, RiGalleryView2, RiLockPasswordLine, RiText, RiToolsLine, RiUserCommunityFill, RiUserLine } from "@remixicon/vue";
 import type { MenuType } from "../interface/menu_type";
 import type { Country } from "../interface/country_type";
 
@@ -47,6 +47,11 @@ const menu_data:MenuType[] = [
                 code:"car",
                 title:"Car",
                 icon:RiCarLine
+            },
+            {
+                code:"portfolio",
+                title:"Portfolio",
+                icon:RiGalleryView2
             }
         ]
     },

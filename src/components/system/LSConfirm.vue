@@ -11,13 +11,22 @@ import { useSystem } from '../../store/system';
 import { watch } from 'vue';
 const confirm = useConfirm();
 const system = useSystem();
-
 watch(system,()=>{
    if(system.IsShowConfirm){
+     var icon = "pi pi-question-circle";
+     if(system.confirm.type?.toLowerCase()=="edit" || system.confirm.type?.toLowerCase()=="update" ){
+        icon = "pi pi-exclamation-circle";
+     }
+     if(system.confirm.type?.toLowerCase()=="delete"){
+        icon = "pi pi-trash";
+     }
+     if(system.confirm.type?.toLowerCase()=="leave" || system.confirm.type?.toLowerCase()=="exit" ){
+        icon = "pi pi-sign-out";
+     }
       confirm.require({
         message: isEmptyData(system.confirm.message)?'Do you want to save? ':system.confirm.message,
         header: isEmptyData(system.confirm.title)? 'Confirm':system.confirm.title,
-        icon: isEmptyData(system.confirm.icon)? 'pi pi-exclamation-triangle':system.confirm.icon,
+        icon: icon,
         rejectProps: {
             label: 'Cancel',
             severity: 'secondary',

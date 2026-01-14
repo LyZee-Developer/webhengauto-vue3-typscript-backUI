@@ -63,7 +63,7 @@ const isShowIconMobile = ref<boolean>(path!="");
         else if(index==4) {
             system.setConfirm({
                 message:"Are you sure! Do you want to exit?",
-                type:"save",
+                type:"exit",
                 onCancel :()=> {
                     console.log("cancel")
                 },

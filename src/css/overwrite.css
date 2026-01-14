@@ -38,7 +38,7 @@ background: #f8fafc17 !important;
 
 
 /* //button */
-.dark .p-button-secondary{
+/* .dark .p-button-secondary{
     background: #262626 !important;
     border: 1px solid #333333 !important;
     color:white;
@@ -59,9 +59,9 @@ background: #f8fafc17 !important;
     border: 1px solid #353535 !important;
 }
 /* //radio */
-.dark .p-radiobutton-checked .p-radiobutton-box .p-radiobutton-icon{
+/* .dark .p-radiobutton-checked .p-radiobutton-box .p-radiobutton-icon{
     background: #018790 !important;
-}
+} */ */
 
 /* pagination */
 .dark .p-paginator{
@@ -87,7 +87,13 @@ background: #f8fafc17 !important;
   width: 200px; /* or a percentage, max-width, etc. */
 }
 
-
+.p-confirmdialog-icon{
+    font-size: 18px !important; 
+    
+    display: flex !important; 
+    justify-content: center !important; 
+    align-items: center !important; 
+}
 
 
 .p-menu-item-link{

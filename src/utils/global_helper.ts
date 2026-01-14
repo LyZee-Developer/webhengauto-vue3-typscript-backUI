@@ -26,6 +26,33 @@ const ToastMessage=(message:ToastType)=>{
 const onErrorImage=(e:any)=>{
     e.target.src  = noimage;
 }
+// const convertToBase64 = (file:Blob) => {
+// if (file && file.type.startsWith('image/')) {
+//     const reader = new FileReader();
+//     var base64Image:String = "";
+//         // This event handler is called when the read operation is successfully completed
+//         reader.onload = (e) => {
+//             // The result attribute contains the data as a data: URL (base64 encoded string)
+//             base64Image = e.target?.result as string;
+//         };
+//         // This event handler is called if an error occurs
+//         reader.onerror = (error) => {
+//             console.error("FileReader error: ", error);
+//         };
+//         // Read the file content as a Data URL (which is a Base64 string)
+//         reader.readAsDataURL(file);
+//         console.log(file)
+//         console.log(base64Image)
+//         return {
+//             base64:base64Image,
+//             file:file
+//         }
+        
+//   } else {
+//     ToastMessage({type:"error",detail:"Please select a valid image file."})
+//   }
+  
+// };
 
 
 export {translate,isEmptyData,ToastMessage,onErrorImage ,GlobalText};

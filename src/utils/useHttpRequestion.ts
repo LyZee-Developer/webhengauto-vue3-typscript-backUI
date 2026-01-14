@@ -7,6 +7,7 @@ export const useHttp=async({url,data,responseResult,method}:{url:string,data?:ob
 
         if(!isEmptyData(method) && method?.toLowerCase()=="post"){
             const res = await axios.post(GlobalText.url.hostUrl+url,{...data});
+            console.log("res",res)
             if(res.status==405){
                 ToastMessage({type:"error",detail: res?.statusText || ""})
                 return ;
@@ -21,6 +22,7 @@ export const useHttp=async({url,data,responseResult,method}:{url:string,data?:ob
             responseResult(res);
         }
     }catch(error:unknown){
+        console.log(error,"23")
         if (axios.isAxiosError(error)) {
             if (error.response?.status === 405) {
                     ToastMessage({
@@ -28,6 +30,19 @@ export const useHttp=async({url,data,responseResult,method}:{url:string,data?:ob
                         detail: "Method Not Allowed"
                     });
                 }
+            if(error.code=="ERR_NETWORK"){
+                ToastMessage({
+                        type: "error",
+                        detail: "Your cloud server doesn't work!"
+                    });
+            }
+            if(!error.response?.data.IsSuccess){
+                ToastMessage({
+                        type: "error",
+                        detail: error.response?.data.Message
+                    });
+            }
+            
         } else if (error instanceof Error) {
             ToastMessage({
                 type: "error",

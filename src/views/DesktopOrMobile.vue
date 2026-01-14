@@ -1,11 +1,11 @@
 <template>
         <WrapContentBody>
-            
             <!-- //Setting -->
             <OwnerView v-if="content=='owner'"></OwnerView>
             <PartnerView v-else-if="content=='partner'"></PartnerView>
             <ServiceView v-else-if="content=='service'"></ServiceView>
             <CarView v-else-if="content=='car'"></CarView>
+            <Portfolio v-else-if="content=='portfolio'"></Portfolio>
             <!-- //user -->
             <UserView v-else-if="content=='user'"></UserView>
             <SecurityPasswordView v-else-if="content=='security_password'"></SecurityPasswordView>
@@ -33,6 +33,7 @@ import SecurityPasswordView from './user/SecurityPasswordView.vue';
 import ContentView from './content/ContentView.vue';
 import BookingAppointmentView from './book_appointment/BookingAppointmentView.vue';
 import ChartView from './chart/ChartView.vue';
+import Portfolio from './setting/portfolio.vue';
 
 const route = useRoute();
 var path = route.fullPath.split("/");

@@ -109,34 +109,34 @@ const changeFile=(e:Event)=>{
     const objectURL = URL.createObjectURL(blob);
     previewImage.value = objectURL;
     convertToBase64(blob);
+   
 }
 
 
 const convertToBase64 = (file:Blob) => {
-if (file && file.type.startsWith('image/')) {
-    const reader = new FileReader();
-        // This event handler is called when the read operation is successfully completed
-        reader.onload = (e) => {
-            // The result attribute contains the data as a data: URL (base64 encoded string)
-            base64Image.value = e.target?.result as string;
-            emit("onChangeFile",{
-                base64:base64Image.value,
-                file:file
-            })
-        };
-        // This event handler is called if an error occurs
-        reader.onerror = (error) => {
-            console.error("FileReader error: ", error);
-        };
-        // Read the file content as a Data URL (which is a Base64 string)
-        reader.readAsDataURL(file);
-        console.log(111)
-  } else {
-    alert('Please select a valid image file.');
-    base64Image.value = '';
-    console.log(222)
-  }
-  
+    if (file && file.type.startsWith('image/')) {
+        const reader = new FileReader();
+            // This event handler is called when the read operation is successfully completed
+            reader.onload = (e) => {
+                // The result attribute contains the data as a data: URL (base64 encoded string)
+                base64Image.value = e.target?.result as string;
+                emit("onChangeFile",{
+                    base64:base64Image.value,
+                    file:file
+                })
+            };
+            // This event handler is called if an error occurs
+            reader.onerror = (error) => {
+                console.error("FileReader error: ", error);
+            };
+            // Read the file content as a Data URL (which is a Base64 string)
+            reader.readAsDataURL(file);
+            console.log(111)
+    } else {
+        alert('Please select a valid image file.');
+        base64Image.value = '';
+        console.log(222)
+    }
 };
 const removeImage=()=>{
     system.setConfirm({
